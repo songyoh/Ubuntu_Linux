@@ -1,0 +1,1192 @@
+브라우저는 html 해석기
+
+내 컴퓨터가 www.naver.com을 어떻게 찾아가는지...
+
+네임서버의 구조
+
+===================prompt status 바꾸기
+root@sun:~# PS1='[\! @ \u \w]\$ '
+=====================
+로그기록 확인
+
+[180 @ root /etc/logrotate.d]# last
+================cmd
+>nslookup
+기본 서버:  kns.kornet.net
+Address:  168.126.63.1 (name server)
+
+==========cmd에서 도메인 ip 확인하는 법
+
+>tracert naver.com
+>ping naver.com
+>nslookup naver.com
+
+=======================
+
+it.kr의 도메인을 가져보자~!
+
+[296 @ root ~]# ai bind9 (설치)
+
+[297 @ root ~]# systemctl start bind9 (실행)
+
+[298 @ root ~]# cd  /etc/bind
+[299 @ root /etc/bind]# ls          (bind 구조 확인)
+bind.keys  db.255    named.conf                named.conf.options
+db.0       db.empty  named.conf.default-zones  rndc.key
+db.127     db.local  named.conf.local          zones.rfc1918
+
+★[300 @ root /etc/bind]# vi named.conf.options  (파일 오픈 - 수정 저장 종료)
+ '//' 주석
+	
+ 21     dnssec-validation no;
+ 22     recursion yes;
+ 23     allow-query { any;};
+ 24     listen-on-v6 { any; };
+
+
+[301 @ root /etc/bind]# vi named.conf  (파일 실행 후 아무것도 수정하지 않고 종료 :q)
+[302 @ root /etc/bind]# nl  named.conf.default-zones (파일 보기)
+     1  // prime the server with knowledge of the root servers
+     2  zone "." {
+     3          type hint;
+     4          file "/usr/share/dns/root.hints";
+     5  };
+
+     6  // be authoritative for the localhost forward and reverse zones, and for
+     7  // broadcast zones as per RFC 1912
+
+     8  zone "localhost" {
+     9          type master;
+    10          file "/etc/bind/db.local";  ( 이 파일에 정보가 있단 뜻)
+    11  };
+
+    12  zone "127.in-addr.arpa" {
+    13          type master;
+    14          file "/etc/bind/db.127";
+    15  };
+
+    16  zone "0.in-addr.arpa" {
+    17          type master;
+    18          file "/etc/bind/db.0";
+    19  };
+
+    20  zone "255.in-addr.arpa" {
+    21          type master;
+    22          file "/etc/bind/db.255";
+    23  };
+
+====================
+
+정방향 조회
+(도메인 주소 검색)
+역방향 조회
+(ip 주소 검색)
+
+====================
+
+[304 @ root /etc/bind]# ls
+bind.keys  db.255    named.conf                named.conf.options
+db.0       db.empty  named.conf.default-zones  rndc.key
+db.127     db.local  named.conf.local          zones.rfc1918
+ 
+[305 @ root /etc/bind]# nl zones.rfc1918   (db.empty 조회)
+     1  zone "10.in-addr.arpa"      { type master; file "/etc/bind/db.empty"; };
+     2
+     3  zone "16.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+     4  zone "17.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+     5  zone "18.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+     6  zone "19.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+     7  zone "20.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+     8  zone "21.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+     9  zone "22.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+    10  zone "23.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+    11  zone "24.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+    12  zone "25.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+    13  zone "26.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+    14  zone "27.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+    15  zone "28.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+    16  zone "29.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+    17  zone "30.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+    18  zone "31.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+
+    19  zone "168.192.in-addr.arpa" { type master; file "/etc/bind/db.empty"; };
+
+[306 @ root /etc/bind]# ls  (파일 확인)
+bind.keys  db.255    named.conf                named.conf.options
+db.0       db.empty  named.conf.default-zones  rndc.key
+db.127     db.local  named.conf.local          zones.rfc1918
+
+[307 @ root /etc/bind]# cp  db.255  it.zone (복사)
+
+[308 @ root /etc/bind]# nl  /usr/share/dns/root.hints  (root 주소 조회)
+     1  ;       This file holds the information on root name servers needed to
+     2  ;       initialize cache of Internet domain name servers
+     3  ;       (e.g. reference this file in the "cache  .  <file>"
+     4  ;       configuration file of BIND domain name servers).
+     5  ;
+     6  ;       This file is made available by InterNIC
+     7  ;       under anonymous FTP as
+     8  ;           file                /domain/named.cache
+     9  ;           on server           FTP.INTERNIC.NET
+    10  ;       -OR-                    RS.INTERNIC.NET
+    11  ;
+    12  ;       last update:     January 11, 2021
+    13  ;       related version of root zone:     2021011101
+    14  ;
+    15  ; FORMERLY NS.INTERNIC.NET
+    16  ;
+    17  .                        3600000      NS    A.ROOT-SERVERS.NET.
+    18  A.ROOT-SERVERS.NET.      3600000      A     198.41.0.4
+    19  A.ROOT-SERVERS.NET.      3600000      AAAA  2001:503:ba3e::2:30
+    20  ;
+    21  ; FORMERLY NS1.ISI.EDU
+    22  ;
+    23  .                        3600000      NS    B.ROOT-SERVERS.NET.
+    24  B.ROOT-SERVERS.NET.      3600000      A     199.9.14.201
+    25  B.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:200::b
+    26  ;
+    27  ; FORMERLY C.PSI.NET
+    28  ;
+    29  .                        3600000      NS    C.ROOT-SERVERS.NET.
+    30  C.ROOT-SERVERS.NET.      3600000      A     192.33.4.12
+    31  C.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:2::c
+    32  ;
+    33  ; FORMERLY TERP.UMD.EDU
+    34  ;
+    35  .                        3600000      NS    D.ROOT-SERVERS.NET.
+    36  D.ROOT-SERVERS.NET.      3600000      A     199.7.91.13
+    37  D.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:2d::d
+    38  ;
+    39  ; FORMERLY NS.NASA.GOV
+    40  ;
+    41  .                        3600000      NS    E.ROOT-SERVERS.NET.
+    42  E.ROOT-SERVERS.NET.      3600000      A     192.203.230.10
+    43  E.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:a8::e
+    44  ;
+    45  ; FORMERLY NS.ISC.ORG
+    46  ;
+    47  .                        3600000      NS    F.ROOT-SERVERS.NET.
+    48  F.ROOT-SERVERS.NET.      3600000      A     192.5.5.241
+    49  F.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:2f::f
+    50  ;
+    51  ; FORMERLY NS.NIC.DDN.MIL
+    52  ;
+    53  .                        3600000      NS    G.ROOT-SERVERS.NET.
+    54  G.ROOT-SERVERS.NET.      3600000      A     192.112.36.4
+    55  G.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:12::d0d
+    56  ;
+    57  ; FORMERLY AOS.ARL.ARMY.MIL
+    58  ;
+    59  .                        3600000      NS    H.ROOT-SERVERS.NET.
+    60  H.ROOT-SERVERS.NET.      3600000      A     198.97.190.53
+    61  H.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:1::53
+    62  ;
+    63  ; FORMERLY NIC.NORDU.NET
+    64  ;
+    65  .                        3600000      NS    I.ROOT-SERVERS.NET.
+    66  I.ROOT-SERVERS.NET.      3600000      A     192.36.148.17
+    67  I.ROOT-SERVERS.NET.      3600000      AAAA  2001:7fe::53
+    68  ;
+    69  ; OPERATED BY VERISIGN, INC.
+    70  ;
+    71  .                        3600000      NS    J.ROOT-SERVERS.NET.
+    72  J.ROOT-SERVERS.NET.      3600000      A     192.58.128.30
+    73  J.ROOT-SERVERS.NET.      3600000      AAAA  2001:503:c27::2:30
+    74  ;
+    75  ; OPERATED BY RIPE NCC
+    76  ;
+    77  .                        3600000      NS    K.ROOT-SERVERS.NET.
+    78  K.ROOT-SERVERS.NET.      3600000      A     193.0.14.129
+    79  K.ROOT-SERVERS.NET.      3600000      AAAA  2001:7fd::1
+    80  ;
+    81  ; OPERATED BY ICANN
+    82  ;
+    83  .                        3600000      NS    L.ROOT-SERVERS.NET.
+    84  L.ROOT-SERVERS.NET.      3600000      A     199.7.83.42
+    85  L.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:9f::42
+    86  ;
+    87  ; OPERATED BY WIDE
+    88  ;
+    89  .                        3600000      NS    M.ROOT-SERVERS.NET.
+    90  M.ROOT-SERVERS.NET.      3600000      A     202.12.27.33
+    91  M.ROOT-SERVERS.NET.      3600000      AAAA  2001:dc3::35
+    92  ; End of file
+
+[309 @ root /etc/bind]# ls
+bind.keys  db.empty    named.conf.default-zones  zones.rfc1918
+db.0       db.local    named.conf.local
+db.127     it.zone     named.conf.options
+db.255     named.conf  rndc.key
+
+[310 @ root /etc/bind]# vi named.conf.default-zones (it.kr 도메인 생성)
+
+  1 // prime the server with knowledge of the root servers
+  2 zone "." {
+  3     type hint;
+  4     file "/usr/share/dns/root.hints";
+  5 };
+  6
+  7 // be authoritative for the localhost forward and reverse zones, and for
+  8 // broadcast zones as per RFC 1912
+  9
+ 10 zone "localhost" {
+ 11     type master;
+ 12     file "/etc/bind/db.local";
+ 13 };
+ 14
+ 15 zone "127.in-addr.arpa" {
+ 16     type master;
+ 17     file "/etc/bind/db.127";
+ 18 };
+ 19
+ 20 zone "0.in-addr.arpa" {
+ 21     type master;
+ 22     file "/etc/bind/db.0";
+ 23 };
+ 24
+ 25 zone "255.in-addr.arpa" {
+ 26     type master;
+ 27     file "/etc/bind/db.255";
+ 28 };
+ 29
+ 30 zone "it.kr" {   =======>(새로 입력)
+ 31     type master;
+ 32     file "/etc/bind/it.zone";
+ 33 };
+
+
+:wq(저장 종료)
+
+
+[311 @ root /etc/bind]# vi it.zone (it.zone 주소를 입력하면 나올 ip주소 설정) ★★★★
+
+  1
+  2 $TTL    604800
+  3 @   IN  SOA ns.it.kr.   master.it.kr. (
+  4                   1     ; Serial
+  5              604800     ; Refresh
+  6               86400     ; Retry
+  7             2419200     ; Expire
+  8              604800 )   ; Negative Cache TTL
+  9 @   IN  NS  ns.it.kr.
+ 10
+ 11     IN  A   100.50.20.10  (누가 it.kr을 물은다면 100.50.20.10로 나오겠다)
+ 12 ns  IN  A   100.50.20.10
+ 13 www IN  A   100.50.20.20
+ 14 ftp IN  A   100.50.20.30
+ 15 mail    IN  A   100.50.20.40
+ 16 blue    IN  CNAME   www
+ 17 java    IN  CNAME   java
+ 18 @   IN  MX  10  mail
+ 19
+
+
+@는 it.kr
+
+
+
+
+
+
+
+
+===============duplicate (root)
+
+root@sun:~# vi  /etc/resolv.conf
+
+
+  1 # This is /run/systemd/resolve/stub-resolv.conf managed by man:systemd-resol    ved(8).
+  2 # Do not edit.
+  3 #
+  4 # This file might be symlinked as /etc/resolv.conf. If you're looking at
+  5 # /etc/resolv.conf and seeing this text, you have followed the symlink.
+  6 #
+  7 # This is a dynamic resolv.conf file for connecting local clients to the
+  8 # internal DNS stub resolver of systemd-resolved. This file lists all
+  9 # configured search domains.
+ 10 #
+ 11 # Run "resolvectl status" to see details about the uplink DNS servers
+ 12 # currently in use.
+ 13 #
+ 14 # Third party programs should typically not access this file directly, but o    nly
+ 15 # through the symlink at /etc/resolv.conf. To manage man:resolv.conf(5) in a
+ 16 # different way, replace this symlink by a static file or a different symlin    k.
+ 17 #
+ 18 # See man:systemd-resolved.service(8) for details about the supported modes     of
+ 19 # operation for /etc/resolv.conf.
+ 20
+ 21 ##nameserver 127.0.0.53
+ 22 nameserver 127.0.0.1
+ 23 options edns0 trust-ad
+ 24 search .
+
+
+root@sun:~# systemctl restart bind9
+root@sun:~# nslookup
+> it.kr
+Server:         127.0.0.1
+Address:        127.0.0.1#53
+
+Name:   it.kr
+Address: 100.50.20.10
+
+> ftp.it.kr
+;; communications error to 127.0.0.1#53: timed out
+Server:         127.0.0.1
+Address:        127.0.0.1#53
+
+Name:   ftp.it.kr
+Address: 100.50.20.30
+> mail.it.kr
+Server:         127.0.0.1
+Address:        127.0.0.1#53
+
+Name:   mail.it.kr
+Address: 100.50.20.40
+> blue.it.kr
+;; communications error to 127.0.0.1#53: timed out
+Server:         127.0.0.1
+Address:        127.0.0.1#53
+
+blue.it.kr      canonical name = www.it.kr.
+Name:   www.it.kr
+Address: 100.50.20.20
+> java.it.kr
+Server:         127.0.0.1
+Address:        127.0.0.1#53
+
+java.it.kr      canonical name = java.it.kr.
+java.it.kr      canonical name = java.it.kr.
+
+
+===========미션
+
+boss.com
+
+200.100.100.10
+200.100.100.20
+...
+-------------------- 하는 법
+
+vi named.conf.default-zones
+
+cd  /etc/bind
+
+ls
+
+cp db.255  boss.zone
+
+================리눅스 재설치
+
+root@sun:~# useradd -D
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/sh
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=no
+root@sun:~# useradd -D -s /bin/bash (bash 설정 완료)
+
+root@sun:~# echo "CREATE_HOME  yes"  >>  /etc/login.defs  (vi를 편집하지 않고도 등록)
+
+root@sun:~# source ~/.profile
+root@sun:~# alias  
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias grep='grep --color=auto'
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -alF'
+alias ls='ls --color=auto' (단축어가 등록되어있지 않음)
+
+root@sun:~# cat > ~/.bash_aliases
+alias ac='apt list --installed | wc -l'
+alias ai='apt -y install'
+alias al='alias'
+alias aq='apt list --installed | grep '
+alias c='clear'
+alias cp='cp -i'
+alias df='df -h'
+alias du='du -sh'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias grep='grep --color=auto'
+alias h='history'
+alias l='ls -AlF'
+alias la='ls -A'
+alias lh='ls -Alh'
+alias li='ls -Ali'
+alias ll='ls -alF'
+alias ls='ls --color=auto'
+alias mv='mv -i'
+alias now=' date +%Y년%m월%d일::%H시%M분%S초'
+alias pq='ps -ef |grep '
+alias rl='source ~/.profile'
+alias ses='systemctl restart '
+alias sss='systemctl start '
+root@sun:~# source ~/.profile  (등록완료)
+
+root@sun:~# useradd blue
+root@sun:~# passwd
+New password:
+Retype new password:
+passwd: password updated successfully (계정생성)
+
+root@sun:~# tail -3  /etc/passwd
+bind:x:116:122::/var/cache/bind:/usr/sbin/nologin
+mysql:x:117:123:MySQL Server,,,:/nonexistent:/bin/false
+blue:x:1001:1001::/home/blue:/bin/bash (계정생성 확인)
+
+root@sun:~# ls /home/
+blue  j  lost+found  (확인)
+
+===============tomcat 설치
+
+root@sun:~# ai tomcat9-examples tocat9-admin tomcat9-docs tomcat9
+
+root@sun:~# sss tomcat9 (실행)  ==> 브라우저 127.0.0.1:8080 (톰캣사이트 실행확인)
+
+root@sun:~# cd  /var/lib/tomcat9/webapps/ROOT
+root@sun:/var/lib/tomcat9/webapps/ROOT# mv index.html  3.html
+root@sun:/var/lib/tomcat9/webapps/ROOT# cat > index.html
+hello!!
+root@sun:/var/lib/tomcat9/webapps/ROOT# ls
+3.html  index.html  META-INF
+root@sun:/var/lib/tomcat9/webapps/ROOT# cd
+root@sun:~# ln -s
+ln: missing file operand
+Try 'ln --help' for more information.
+root@sun:~# ln -s /var/lib/tomcat9/webapps/ROOT  /var/www/html/jsp
+
+============파일수정 ( 웹에서 톰캣 설정하는 법)p.173
+
+root@sun:~# cd  /var/lib/tomcat9/conf
+root@sun:/var/lib/tomcat9/conf# ls
+Catalina             context.xml           logging.properties  server.xml        web.xml
+catalina.properties  jaspic-providers.xml  policy.d            tomcat-users.xml
+
+root@sun:/var/lib/tomcat9/conf# vi tomcat-users.xml ( user 설정)
+
+룰네임 = "manager-gui"
+name="admin-gui"
+user name="j" pw="j" roles="manager-gui, admin-gui"
+
+:wq
+
+========================php 연동
+
+root@sun:~# systemctl stop tomcat9 (tomcat9을 중지시켜야함)
+
+
+==========================mysql 실행 p.165
+<<
+linux-ID,pw : aha , 1
+linux-id : j , j
+
+mysql-id : myaha, 1  , ahaDB
+mysql-root-pw: jj
+		>>
+
+mysql> use mysql
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> alter user root@localhost identified with mysql_native_password by 'jj';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> create user myaha@localhost identified with mysql_native_password by '1';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> grant all privileges on ahaDB.* to myaha@localhost;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.01 sec)
+
+===============duplicate(root)
+
+root@sun:~# useradd aha
+root@sun:~# passwd aha
+New password:
+Retype new password:
+passwd: password updated successfully
+
+----------------------mysql 실행
+root@sun:~# mysql -u root -pjj
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 8.0.33-0ubuntu0.22.04.2 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+----------------------duplicate(aha,1)
+aha@sun:~$ mysql -u myaha -p1
+
+mysql> create database ahaDB;     (database  끝에"s"붙이지 않게 주의!!!!)
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use ahaDB;
+Database changed
+
+==========================php연동, 워드프레스 설치 p170,171
+
+
+
+
+root@sun:/var/www/html# echo " Happy Day!!!!" > a.html
+echo " Happy Daynl index.htmlnl index.html" > a.html
+
+root@sun:/var/www/html# cat > b.php
+<?php
+        phpinfo();
+?>
+
+root@sun:/var/www/html# echo " Happy Day" > a.html
+
+
+root@sun:/var/www/html# ai php-gd php-intl php-mbstring php-xml php-zip php-mysql (설치)
+
++    php-xmlrpc php-zip php-curl (추가 설치)
+
+root@sun:/var/www/html# wget https://ko.wordpress.org/latest-ko_KR.tar.gz(워드프레스 설치)
+
+
+root@sun:/var/www/html# tar xf latest-ko_KR.tar.gz (압축해제)
+
+root@sun:/var/www/html# ls
+a.html  b.php  index.html  jsp  latest-ko_KR.tar.gz
+root@sun:/var/www/html# tar xf latest-ko_KR.tar.gz
+root@sun:/var/www/html# ls
+a.html  b.php  index.html  jsp  latest-ko_KR.tar.gz  wordpress
+
+root@sun:/var/www/html# ls wordpress/
+index.php        wp-blog-header.php    wp-includes        wp-settings.php
+license.txt      wp-comments-post.php  wp-links-opml.php  wp-signup.php
+readme.html      wp-config-sample.php  wp-load.php        wp-trackback.php
+wp-activate.php  wp-content            wp-login.php       xmlrpc.php
+wp-admin         wp-cron.php           wp-mail.php
+root@sun:/var/www/html# mv wordpress/  wp
+root@sun:/var/www/html# cd wp
+
+root@sun:/var/www/html/wp# cp wp-config-sample.php  wp-config.php (샘플->실제파일 복사)
+
+root@sun:/var/www/html/wp# cp wp-config-sample.php  wp-config.php
+root@sun:/var/www/html/wp# vi wp-config.php
+
+:23 = 'ahaDB'
+
+:26 ='myaha'
+
+:29 = '1'
+
+:wq
+
+====> 설정이 완료되었다면 모두 실행 종료 후 내보내기~!(이름 변경) = 버츄어박스 0616
+==> 가져오기
+=======================p.139
+
+네트워크
+
+
+웹서버 설치 삭제 재설치
+
+
+root@sun:~# apt -y remove apache2
+
+root@sun:~# apt -y remove apache2-data apache2-bin apache2-utils
+
+root@sun:~# ai apache2
+
+root@sun:~# systemctl status apache2
+× apache2.service - The Apache HTTP Server
+     Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor preset: enab>
+     Active: failed (Result: exit-code) since Fri 2023-06-16 14:34:51 KST; 44s ago
+       Docs: https://httpd.apache.org/docs/2.4/
+        CPU: 7ms
+
+Jun 16 14:34:51 sun systemd[1]: Starting The Apache HTTP Server...
+Jun 16 14:34:51 sun apachectl[21073]: apache2: Syntax error on line 146 of /etc/apache>
+Jun 16 14:34:51 sun apachectl[21070]: Action 'start' failed.
+Jun 16 14:34:51 sun apachectl[21070]: The Apache error log may have more information.
+Jun 16 14:34:51 sun systemd[1]: apache2.service: Control process exited, code=exited, >
+Jun 16 14:34:51 sun systemd[1]: apache2.service: Failed with result 'exit-code'.
+Jun 16 14:34:51 sun systemd[1]: Failed to start The Apache HTTP Server.
+
+root@sun:~# systemctl start apache2 (실행 시작을 입력했으나 오류가 ㅏㄴㅁ)
+Job for apache2.service failed because the control process exited with error code.
+See "systemctl status apache2.service" and "journalctl -xeu apache2.service" for details.
+
+========================================restart(root)
+
+root@sun:~# ai sendmail
+
+root@sun:~# systemctl status sendmail
+
+
+-----시스템 제어
+
+root@sun:~# systemctl enable apache2
+Synchronizing state of apache2.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable apache2
+root@sun:~# systemctl disable apache2
+Synchronizing state of apache2.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install disable apache2
+Removed /etc/systemd/system/multi-user.target.wants/apache2.service.
+root@sun:~# systemctl enable apache2
+Synchronizing state of apache2.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable apache2
+Created symlink /etc/systemd/system/multi-user.target.wants/apache2.service → /lib/systemd/system/apache2.service.
+
+-------------
+
+root@sun:~# cd  /etc/apache2
+root@sun:/etc/apache2# ls
+apache2.conf    conf-enabled  magic           mods-enabled  sites-available
+conf-available  envvars       mods-available  ports.conf    sites-enabled
+
+=============duplicate(root)==실행만 해보기
+
+=============================(root)
+
+root@sun:/etc/apache2# vi apache2.conf
+
+
+root@sun:/var/www# pwd
+/var/www
+root@sun:/var/www# ls
+html
+root@sun:/var/www# cd html/
+root@sun:/var/www/html# ls
+b.html  c.html  dd  index.html
+root@sun:/var/www/html# mv index.html  33.html
+root@sun:/var/www/html# ls
+33.html  b.html  c.html  dd
+root@sun:/var/www/html# echo "index.html"  > index.html
+
+root@sun:/var/www/html# mkdir my  you
+root@sun:/var/www/html# echo "555" > my/555.html
+root@sun:/var/www/html# echo "777" > you/777.html
+root@sun:/var/www/html# ls
+33.html  b.html  c.html  dd  index.html  my  you
+root@sun:/var/www/html# ls my
+555.html
+root@sun:/var/www/html# ls you
+777.html
+
+root@sun:/var/www/html# mv index.html  99.html
+
+
+=====================로그기록 확인
+
+
+ 366  cd  /var/log
+  367  ls
+  368  cd apache2/
+  369  nl access.log
+  370  0>access.log
+  371  nl access.log
+  372  nl error.log
+
+=====================
+
+root@sun:/etc/apache2/mods-available# mkdir /var/www/html/icons/
+root@sun:/etc/apache2/mods-available# ls /var/www/html/icons
+root@sun:/etc/apache2/mods-available# systemctl restart apache2
+root@sun:/etc/apache2/mods-available# cd ..
+root@sun:/etc/apache2# ls
+apache2.conf    conf-enabled  magic           mods-enabled  sites-available
+conf-available  envvars       mods-available  ports.conf    sites-enabled
+root@sun:/etc/apache2# cd mods-enabled/
+root@sun:/etc/apache2/mods-enabled# ls
+access_compat.load  authz_user.load  filter.load       reqtimeout.load
+alias.conf          autoindex.conf   mime.conf         setenvif.conf
+alias.load          autoindex.load   mime.load         setenvif.load
+auth_basic.load     deflate.conf     mpm_event.conf    status.conf
+authn_core.load     deflate.load     mpm_event.load    status.load
+authn_file.load     dir.conf         negotiation.conf
+authz_core.load     dir.load         negotiation.load
+authz_host.load     env.load         reqtimeout.conf
+root@sun:/etc/apache2/mods-enabled# l
+합계 0
+lrwxrwxrwx 1 root root 36  6월 12 17:51 access_compat.load -> ../mods-available/access_compat.load
+lrwxrwxrwx 1 root root 28  6월 12 17:51 alias.conf -> ../mods-available/alias.conf
+lrwxrwxrwx 1 root root 28  6월 12 17:51 alias.load -> ../mods-available/alias.load
+lrwxrwxrwx 1 root root 33  6월 12 17:51 auth_basic.load -> ../mods-available/auth_basic.load
+lrwxrwxrwx 1 root root 33  6월 12 17:51 authn_core.load -> ../mods-available/authn_core.load
+lrwxrwxrwx 1 root root 33  6월 12 17:51 authn_file.load -> ../mods-available/authn_file.load
+lrwxrwxrwx 1 root root 33  6월 12 17:51 authz_core.load -> ../mods-available/authz_core.load
+lrwxrwxrwx 1 root root 33  6월 12 17:51 authz_host.load -> ../mods-available/authz_host.load
+lrwxrwxrwx 1 root root 33  6월 12 17:51 authz_user.load -> ../mods-available/authz_user.load
+lrwxrwxrwx 1 root root 32  6월 12 17:51 autoindex.conf -> ../mods-available/autoindex.conf
+lrwxrwxrwx 1 root root 32  6월 12 17:51 autoindex.load -> ../mods-available/autoindex.load
+lrwxrwxrwx 1 root root 30  6월 12 17:51 deflate.conf -> ../mods-available/deflate.conf
+lrwxrwxrwx 1 root root 30  6월 12 17:51 deflate.load -> ../mods-available/deflate.load
+lrwxrwxrwx 1 root root 26  6월 12 17:51 dir.conf -> ../mods-available/dir.conf
+lrwxrwxrwx 1 root root 26  6월 12 17:51 dir.load -> ../mods-available/dir.load
+lrwxrwxrwx 1 root root 26  6월 12 17:51 env.load -> ../mods-available/env.load
+lrwxrwxrwx 1 root root 29  6월 12 17:51 filter.load -> ../mods-available/filter.load
+lrwxrwxrwx 1 root root 27  6월 12 17:51 mime.conf -> ../mods-available/mime.conf
+lrwxrwxrwx 1 root root 27  6월 12 17:51 mime.load -> ../mods-available/mime.load
+lrwxrwxrwx 1 root root 32  6월 12 17:51 mpm_event.conf -> ../mods-available/mpm_event.conf
+lrwxrwxrwx 1 root root 32  6월 12 17:51 mpm_event.load -> ../mods-available/mpm_event.load
+lrwxrwxrwx 1 root root 34  6월 12 17:51 negotiation.conf -> ../mods-available/negotiation.conf
+lrwxrwxrwx 1 root root 34  6월 12 17:51 negotiation.load -> ../mods-available/negotiation.load
+lrwxrwxrwx 1 root root 33  6월 12 17:51 reqtimeout.conf -> ../mods-available/reqtimeout.conf
+lrwxrwxrwx 1 root root 33  6월 12 17:51 reqtimeout.load -> ../mods-available/reqtimeout.load
+lrwxrwxrwx 1 root root 31  6월 12 17:51 setenvif.conf -> ../mods-available/setenvif.conf
+lrwxrwxrwx 1 root root 31  6월 12 17:51 setenvif.load -> ../mods-available/setenvif.load
+lrwxrwxrwx 1 root root 29  6월 12 17:51 status.conf -> ../mods-available/status.conf
+lrwxrwxrwx 1 root root 29  6월 12 17:51 status.load -> ../mods-available/status.load
+
+-======================duplicate(aha,1)
+
+ls
+mkdir public_html
+ll  /home/  ( aha에게 x권한없음)
+
+echo "aha's HOME" > public_html/index.html
+ls public_html/
+
+브라우저>  127.0.0.1/aha(권한없음)
+
+리눅스>>
+
+ls public_html/   ( 권한 확인)
+
+chmod 751 ~    (권한 바꿔줌)
+
+>>aha의 계정에서도 워드프레스를 다운받을 수 있어야 한다
+
+--------------------------(root) 처음부터 다시
+
+root@sun:~# useradd green
+root@sun:~# passwd green
+새 암호:1
+새 암호 재입력:1
+passwd: 암호를 성공적으로 업데이트했습니다
+
+root@sun:~# cd  /etc/apache2/mods-enabled/
+root@sun:/etc/apache2/mods-enabled# ls
+access_compat.load  authz_user.load  filter.load       reqtimeout.conf
+alias.conf          autoindex.conf   mime.conf         reqtimeout.load
+alias.load          autoindex.load   mime.load         setenvif.conf
+auth_basic.load     deflate.conf     mods-a            setenvif.load
+authn_core.load     deflate.load     mpm_event.conf    status.conf
+authn_file.load     dir.conf         mpm_event.load    status.load
+authz_core.load     dir.load         negotiation.conf  userdir.conf
+authz_host.load     env.load         negotiation.load  userdir.load
+root@sun:/etc/apache2/mods-enabled# rm -f userdir.* (날리고 재시작)
+
+root@sun:/etc/apache2/mods-enabled# ln -s ../mods-available/userdir.conf
+root@sun:/etc/apache2/mods-enabled# ln -s ../mods-available/userdir.load
+
+------------------.dupli(green,1)
+
+green@sun:~$ chmod 751 ~
+
+green@sun:~$ mkdir public_html
+
+green@sun:~$ echo "Welcome to Green's HOME" > public_html/index.html
+
+
+----------------------(root)
+
+root@sun:~# apt show apache2
+Package: apache2
+Version: 2.4.52-1ubuntu4.5
+Priority: optional
+Section: web
+Origin: Ubuntu
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Original-Maintainer: Debian Apache Maintainers <debian-apache@lists.debian.org>
+Bugs: https://bugs.launchpad.net/ubuntu/+filebug
+Installed-Size: 546 kB
+Provides: httpd, httpd-cgi
+Pre-Depends: init-system-helpers (>= 1.54~)
+Depends: apache2-bin (= 2.4.52-1ubuntu4.5), apache2-data (= 2.4.52-1ubuntu4.5), apache2-utils (= 2.4.52-1ubuntu4.5), lsb-base, mime-support, perl:any, procps
+Recommends: ssl-cert
+Suggests: apache2-doc, apache2-suexec-pristine | apache2-suexec-custom, www-browser, ufw
+Conflicts: apache2.2-bin, apache2.2-common
+Replaces: apache2.2-bin, apache2.2-common
+Homepage: https://httpd.apache.org/
+Task: lamp-server
+Download-Size: 97.8 kB
+APT-Manual-Installed: yes
+APT-Sources: http://kr.archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages
+Description: Apache HTTP Server
+ The Apache HTTP Server Project's goal is to build a secure, efficient and
+ extensible HTTP server as standards-compliant open source software. The
+ result has long been the number one web server on the Internet.
+ .
+ Installing this package results in a full installation, including the
+ configuration files, init scripts and support scripts.
+
+N: There are 2 additional records. Please use the '-a' switch to see them.
+
+
+root@sun:~# hostname
+sun
+root@sun:~# hostname it.kr
+root@sun:~# mail green
+Cc:
+Subject: hi green!
+******
+green....
+*****
+
+root@sun:~# systemctl restart sendmail
+root@sun:~# mail green
+Cc: aha
+Subject: last lesson..
+*****************
+green is well..
+************
+.
+^d (메일발송 종료)
+
+
+===============해보기
+
+root@sun:~# mkdir d5
+root@sun:~# cd d5
+root@sun:~/d5# cat << A > a1
+> 강감찬
+> 이순신
+> 김춘추
+> 김유신
+> A
+root@sun:~/d5# cat << END > a2
+> 90
+> 80
+> 70
+> END
+root@sun:~/d5# cat << EOF  > a3
+> 20
+> 40
+> 50
+> EOF
+
+root@sun:~/d5# nl a1
+     1  강감찬
+     2  이순신
+     3  김춘추
+     4  김유신
+root@sun:~/d5# nl a2
+     1  90
+     2  80
+     3  70
+root@sun:~/d5# nl a3
+     1  20
+     2  40
+     3  50
+
+------------ 모두 합치고 싶을때
+
+root@sun:~/d5# paste a1 a2 a3
+강감찬  90      20
+이순신  80      40
+김춘추  70      50
+김유신
+root@sun:~/d5# paste a1 a2 a3 | tee aa
+강감찬  90      20
+이순신  80      40
+김춘추  70      50
+김유신
+root@sun:~/d5# ls
+a1  a2  a3  aa
+
+root@sun:~/d5# nl aa
+     1  강감찬  90      20
+     2  이순신  80      40
+     3  김춘추  70      50
+     4  김유신
+
+---------sqlite3
+
+root@sun:~/d5# sqlite3
+SQLite version 3.37.2 2022-01-06 13:25:41
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .open myDB
+sqlite> create table Man(name, kor, eng);
+
+sqlite> .import aa Man
+aa:1: expected 3 columns but found 1 - filling the rest with NULL
+aa:2: expected 3 columns but found 1 - filling the rest with NULL
+aa:3: expected 3 columns but found 1 - filling the rest with NULL
+aa:4: expected 3 columns but found 1 - filling the rest with NULL
+sqlite> select * from Man;
+강감찬  90      20||
+이순신  80      40||
+김춘추  70      50||
+김유신          ||
+
+sqlite> .q
+
+--------root (aa 파일 수정)
+
+root@sun:~/d5# cat aa | tr '\t' '|' | tee bb
+강감찬|90|20
+이순신|80|40
+김춘추|70|50
+김유신||
+
+root@sun:~/d5# nl bb
+     1  강감찬|90|20
+     2  이순신|80|40
+     3  김춘추|70|50
+     4  김유신||
+
+root@sun:~/d5# sqlite3
+SQLite version 3.37.2 2022-01-06 13:25:41
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .open
+sqlite> .open myDB
+sqlite> .table
+Man
+sqlite> .mode col
+sqlite> .hea on
+sqlite> select * from Man;
+name       kor  eng
+---------  ---  ---
+강감찬  90      20
+이순신  80      40
+김춘추  70      50
+김유신
+sqlite> select name from Man;
+name
+---------
+강감찬  90      20
+이순신  80      40
+김춘추  70      50
+김유신
+sqlite> delete from Man;
+sqlite> select * from Man; (삭제되어 나오지 않는다)
+
+------------
+
+sqlite> create table N(name, kor, eng);
+
+sqlite> .import bb N
+
+sqlite> select * from N;
+name  kor  eng
+----  ---  ---
+강감찬   90   20
+이순신   80   40
+김춘추   70   50
+김유신
+
+sqlite> select name from N;
+name
+----
+강감찬
+이순신
+김춘추
+김유신
+
+sqlite> select kor from N;
+kor
+---
+90
+80
+70
+sqlite> .q
+
+===============
+
+root@sun:~/d5# ls
+a1  a2  a3  aa  bb  myDB (DB파일이 생겼다)
+
+root@sun:~/d5# file myDB
+myDB: SQLite 3.x database, last written using SQLite version 3037002, file counter 5, database pages 3, cookie 0x2, schema 4, UTF-8, version-valid-for 5
+
+root@sun:~/d5# nl aa
+     1  강감찬  90      20
+     2  이순신  80      40
+     3  김춘추  70      50
+     4  김유신
+root@sun:~/d5# awk '{ print $0 }'
+aa
+aa
+aa
+aa
+^C
+root@sun:~/d5# awk '{ print $0 }' aa
+강감찬  90      20
+이순신  80      40
+김춘추  70      50
+김유신
+
+root@sun:~/d5# awk '{ print $1 }' aa
+강감찬
+이순신
+김춘추
+김유신
+root@sun:~/d5# awk '{ print $2 }' aa
+90
+80
+70
+
+root@sun:~/d5# awk '{ print $2, $3 }' aa
+90 20
+80 40
+70 50
+
+======================root  창을 2개 연다
+
+root@sun:~# seq 5
+1
+2
+3
+4
+5
+root@sun:~# seq 10
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+root@sun:~# seq 10 | paste - - -
+1       2       3
+4       5       6
+7       8       9
+10
+root@sun:~# seq 10 | paste - - - - -
+1       2       3       4       5
+6       7       8       9       10
+
+root@sun:~/d5# seq 10 20 | paste - - - - -
+10      11      12      13      14
+15      16      17      18      19
+20
+
+root@sun:~/d5# seq 10 2 20 | paste - - - - -
+10      12      14      16      18
+20
+
+root@sun:~/d5# seq 0 10 100 | paste - - - - -
+0       10      20      30      40
+50      60      70      80      90
+100
+
+root@sun:~/d5# vi b.sh
+
+ 1 #!/bin/bash
+  2 echo "HEllo Bash"
+  3 for i in `seq 5`
+  4 do
+  5     echo"리눅스가 짱이다"
+  6 done
+
+
+-------------------p.202~203
+root@sun:~# cd d5
+root@sun:~/d5# bash b.sh
+HEllo Bash
+b.sh: 줄 5: echo리눅스가 짱이다: 명령어를 찾을 수 없음
+b.sh: 줄 5: echo리눅스가 짱이다: 명령어를 찾을 수 없음
+b.sh: 줄 5: echo리눅스가 짱이다: 명령어를 찾을 수 없음
+b.sh: 줄 5: echo리눅스가 짱이다: 명령어를 찾을 수 없음
+b.sh: 줄 5: echo리눅스가 짱이다: 명령어를 찾을 수 없음
+root@sun:~/d5# b.sh
+명령어 'b.sh' 을(를) 찾을 수 없습니다. 다음 명령어로 시도하시겠습니까:
+  deb bsshavahi-ui-utils의 명령어 ' (0.8-5ubuntu5.1)'
+  deb boshbosh의 명령어 ' (0.6-11)'
+  deb bashbash의 명령어 ' (5.1-6ubuntu1)'
+  deb bshbsh의 명령어 ' (2.0b4-20)'
+Try: apt install <deb name>
+root@sun:~/d5# ls
+a1  a2  a3  aa  b.sh  bb  myDB
+root@sun:~/d5# chmod 755 b.sh
+root@sun:~/d5# b.sh
+명령어 'b.sh' 을(를) 찾을 수 없습니다. 다음 명령어로 시도하시겠습니까:
+  deb bsshavahi-ui-utils의 명령어 ' (0.8-5ubuntu5.1)'
+  deb boshbosh의 명령어 ' (0.6-11)'
+  deb bashbash의 명령어 ' (5.1-6ubuntu1)'
+  deb bshbsh의 명령어 ' (2.0b4-20)'
+Try: apt install <deb name>
+root@sun:~/d5# ./b.sh
+HEllo Bash
+./b.sh: 줄 5: echo리눅스가 짱이다: 명령어를 찾을 수 없음
+./b.sh: 줄 5: echo리눅스가 짱이다: 명령어를 찾을 수 없음
+./b.sh: 줄 5: echo리눅스가 짱이다: 명령어를 찾을 수 없음
+./b.sh: 줄 5: echo리눅스가 짱이다: 명령어를 찾을 수 없음
+./b.sh: 줄 5: echo리눅스가 짱이다: 명령어를 찾을 수 없음
+
+
+------------------
+
+
+root@sun:~/d5# ./myu.sh
+
+
+root@sun:~/d5# vi b.sh
+root@sun:~/d5# cp b.sh  myu.sh
+root@sun:~/d5# vi myu.sh
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

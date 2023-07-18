@@ -1,0 +1,1604 @@
+서버 IP : 106.10.34.15
+포트 : 1111
+
+id : k25
+pw : 1
+
+mysql-user : myk25     오송이 : myk25
+mysql-pw : 1
+mysql-db : my1DB ~ my39DB
+
+=======
+네이버 카페 가입
+별명 : NC6오송이
+===============
+
+k24@linux:~$ uptime
+ 09:50:05 up 39 days, 14:38, 29 users,  load average: 0.10, 0.04, 0.01
+
+==================
+
+k25@linux:~$ whoami
+k25
+k25@linux:~$ tty
+/dev/pts/6
+k25@linux:~$ uname
+Linux
+k25@linux:~$ uname -r
+4.15.0-118-generic
+k25@linux:~$  who am i
+k25      pts/6        2023-06-13 09:51 (222.106.201.70)
+k25@linux:~$ pwd
+/home/k25
+k25@linux:~$ echo $HOME
+/home/k25
+k25@linux:~$ hostname
+linux.kr
+
+
+===================
+-메일보내기
+
+k25@linux:~$ mail k40
+Cc: k24
+Subject: 안녕하세요
+***************
+오늘도 좋은하루 되세요:)
+***************
+ctrl + d 보내기
+===================
+-linux에서 mysql 전환
+
+k25@linux:~$ mysql -u myk25 -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 616
+Server version: 5.7.41-0ubuntu0.18.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+
+======================
+-user 확인
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> select user();
++-----------------+
+| user()          |
++-----------------+
+| myk25@localhost |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> select now();
++---------------------+
+| now()               |
++---------------------+
+| 2023-06-13 10:08:08 |
++---------------------+
+1 row in set (0.00 sec)
+
+=========================
+
+-DB세팅
+
+mysql> create database my25DB;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| my25DB             |
++--------------------+
+2 rows in set (0.00 sec)
+
+mysql> use my25DB;
+Database changed
+
+========================
+-권한확인
+mysql> show grants for current_user;
++-----------------------------------------------------------+
+| Grants for myk25@localhost                                |
++-----------------------------------------------------------+
+| GRANT USAGE ON *.* TO 'myk25'@'localhost'                 |
+| GRANT ALL PRIVILEGES ON `my25DB`.* TO 'myk25'@'localhost' |
++-----------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+======================= 첫번째 lunch메뉴 테이블은 국문이라서 제작이 안됨
+
+mysql> create table a(
+    -> kor int,
+    -> mat int);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> insert into a values(40,50);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into a values(70,90);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from a;
++------+------+
+| kor  | mat  |
++------+------+
+|   40 |   50 |
+|   70 |   90 |
++------+------+
+2 rows in set (0.00 sec)
+
+mysql> exit
+Bye
+
+=========================
+
+create 만들기
+insert into 추가하기
+select 조회하기
+
+========================
+
+-용량확인
+k25@linux:~$ quota
+Disk quotas for user k25 (uid 1028):
+     Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
+     /dev/xvda1      48  200000  250000              14       0       0
+
+k25@linux:~$ du -sh ~
+48K     /home/k25
+k25@linux:~$ du -sh  /etc
+du: '/etc/polkit-1/localauthority' 디렉터리를 읽을 수 없음: 허가 거부
+du: '/etc/ssl/private' 디렉터리를 읽을 수 없음: 허가 거부
+8.6M    /etc
+k25@linux:~$ mkdir d2
+k25@linux:~$ cd d2
+k25@linux:~/d2$ fallocate -l 300M t100
+fallocate: fallocate failed: 디스크 할당량이 초과됨
+
+k25@linux:~/d2$ rm -rf t100               (삭제)
+
+
+=========================================
+-텍스트파일 확인
+k25@linux:~$ w3m localhost
+=========================================
+
+k25@linux:~$ ls
+d2  mbox  public_html
+k25@linux:~$ cd public_html/
+k25@linux:~/public_html$
+k25@linux:~/public_html$ cat >  index.html
+안녕하세요 어서오세요 감사해요 다시만나요
+k25@linux:~/public_html$ w3m localhost/~k25
+
+==========================================
+
+하다가 잘못되면 ctrl + c
+
+=========================================
+
+k25@linux:~/public_html$ cd
+k25@linux:~$
+k25@linux:~$ mkdir  /d20
+mkdir: `/d20' 디렉토리를 만들 수 없습니다: 허가 거부
+k25@linux:~$ mkdir d20
+k25@linux:~$ mkdir ./d22
+k25@linux:~$ ;s
+-bash: syntax error near unexpected token `;'
+k25@linux:~$ ls
+d2  d20  d22  mbox  public_html
+
+-mbox 는 메일박스
+
+==========================================
+
+ 1 # This file contains user readable names that can be used in place of rpc
+  2 # program numbers.
+  3
+  4 portmapper  100000  portmap sunrpc
+  5 rstatd      100001  rstat rstat_svc rup perfmeter
+  6 rusersd     100002  rusers
+  7 nfs     100003  nfsprog
+  8 ypserv      100004  ypprog
+  9 mountd      100005  mount showmount
+ 10 ypbind      100007
+ 11 walld       100008  rwall shutdown
+ 12 yppasswdd   100009  yppasswd
+ 13 etherstatd  100010  etherstat
+ 14 rquotad     100011  rquotaprog quota rquota
+ 15 sprayd      100012  spray
+ 16 3270_mapper 100013
+ 17 rje_mapper  100014
+ 18 selection_svc   100015  selnsvc
+ 19 database_svc    100016
+ 20 rexd        100017  rex
+ 21 alis        100018
+ 22 sched       100019
+ 23 llockmgr    100020
+ 24 nlockmgr    100021
+ 25 x25.inr     100022
+ 26 statmon     100023
+ 27 status      100024
+ 28 bootparam   100026
+ 29 ypupdated   100028  ypupdate
+ 30 keyserv     100029  keyserver
+ 31 tfsd        100037
+ 32 nsed        100038
+ 33 nsemntd     100039
+ 34 ypxfrd      100069
+ 35 pcnfsd      150001
+ 36 amd     300019  amq
+ 37 sgi_fam     391002
+ 38 ugidd       545580417
+ 39 fypxfrd     600100069   freebsd-ypxfrd
+ 40 bwnfsd          788585389
+
+[[  ]]
+:30 : 30번라인
+5dd - 삭제 5줄
+esc u : undo원위치
+
+^x -> dd  :잘라내기      dw
+^c -> yy  :복사          yw
+^v -> p   :붙여넣기      p      
+gg : 맨앞으로
+G : 맨뒤로
+
+10G : 10번라인
+
+ddp : 줄바꿈
+
+x : 단어단위
+xp : 앞뒤바뀜
+~ : 대문자 변경
+
+검색
+
+/
+?
+
+:1, 10 s/pp/GGG/g             -정규 표현식(내용 수정하는 기능)
+:6 s/user/blue/g
+
+:set nonumber     =   :se nonu
+:set number       =   :se nu
+
+:set cusorline    
+
+:3 r ! cal
+:0 r ! date
+:20 r ! who
+:set mouse=a    (마우스사용,권장하진 않음)
+
+:4, 12 w kk3     (라인단위 저장)
+
+==================================
+
+k25@linux:~/d2$ ls -Al ~
+합계 60
+-rw-r--r-- 1 k25 k25   303  5월  4 23:12 .bash_aliases
+-rw-r--r-- 1 k25 k25   220  4월  5  2018 .bash_logout
+-rw-r--r-- 1 k25 k25  3771  4월  5  2018 .bashrc
+drwx------ 2 k25 k25  4096  6월 13 09:51 .cache
+drwx------ 3 k25 k25  4096  6월 13 09:51 .gnupg
+-rw------- 1 k25 k25  1235  6월 13 11:44 .mysql_history
+-rw-r--r-- 1 k25 k25   807  4월  5  2018 .profile
+-rw------- 1 k25 k25 10289  6월 13 12:16 .viminfo
+
+-rw-r--r-- 1 k25 k25    80  5월  4 23:12 .vimrc
+
+drwx------ 2 k25 k25  4096  6월 13 10:57 .w3m
+drwxrwxr-x 2 k25 k25  4096  6월 13 12:15 d2
+-rw------- 1 k25 k25  2749  6월 13 10:01 mbox
+drwxr-xr-x 2 k25 k25  4096  6월 13 10:55 public_html
+
+
+k25@linux:~/d2$ nl ~/.vimrc
+     1  se nu ai ci si ts=4 sw=4 ruler title showmatch
+     2  syntax on
+     3  hi comment ctermfg=red
+
+
+==================명령어 목록
+k25@linux:~$ alias
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias c='clear'
+alias cp='cp -i'
+alias df='df -h'
+alias du='du -sh'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias grep='grep --color=auto'
+alias h='history'
+alias l='ls -AlF'
+alias la='ls -A'
+alias lh='ls -Alh'
+alias li='ls -Ali'
+alias ll='ls -alF'
+alias ls='ls --color=auto'
+alias mv='mv -i'
+alias now=' date +%Y년%m월%d일::%H시%M분%S초'
+alias uq='tail -7 /etc/passwd && ls /home'
+================================
+k25@linux:~$ now
+2023년06월13일::12시43분13초
+========================
+k25@linux:~$ a
+a: 명령을 찾을 수 없습니다
+k25@linux:~$ alias a='alias'
+k25@linux:~$ 3
+3: 명령을 찾을 수 없습니다
+k25@linux:~$ alias 3='who | sort | nl'
+
+
+=========================
+
+실행파일 exe, com
+설정파일( text, shell script)
+
+# 주석 파일
+
+ HISTSIZE=1000   변수
+ HISTFILESIZE=2000
+
+========================
+k25@linux:~$ pstree
+systemd─┬─accounts-daemon───2*[{accounts-daemon}]
+        ├─2*[agetty]
+        ├─apache2───5*[apache2]
+        ├─atd
+        ├─chronyd
+        ├─cron
+        ├─dbus-daemon
+        ├─dhclient
+        ├─irqbalance───{irqbalance}
+        ├─lvmetad
+        ├─lxcfs───6*[{lxcfs}]
+        ├─mysqld───49*[{mysqld}]
+        ├─named───18*[{named}]
+        ├─networkd-dispat───{networkd-dispat}
+        ├─noms_nsight───noms_nsight───8*[{noms_nsight}]
+        ├─polkitd───2*[{polkitd}]
+        ├─rsyslogd───3*[{rsyslogd}]
+        ├─sendmail-mta
+        ├─sshd─┬─sshd───bash
+        │      ├─sshd───sshd───bash─┬─2*[mail]
+        │      │                    ├─4*[mysql]
+        │      │                    ├─2*[sort]
+        │      │                    └─7*[vi]
+        │      ├─10*[sshd───sshd───bash───mysql]
+        │      ├─21*[sshd───sshd───bash]
+        │      ├─sshd───sshd───bash───vimtutor───vim
+        │      ├─sshd───sshd───bash─┬─4*[vi]
+        │      │                    └─w3m───15*[{w3m}]
+        │      ├─3*[sshd───sshd───bash───2*[vi]]
+        │      ├─sshd───sshd───bash─┬─mail
+        │      │                    └─mysql
+        │      ├─sshd───sshd───bash───pstree
+        │      ├─6*[sshd───sshd───bash───vi]
+        │      ├─sshd───sshd───bash─┬─3*[vi]
+        │      │                    └─w3m───15*[{w3m}]
+        │      ├─sshd───sshd───bash─┬─2*[vi]
+        │      │                    └─vim
+        │      └─sshd───sshd───bash───w3m───15*[{w3m}]
+        ├─30*[systemd───(sd-pam)]
+        ├─systemd-journal
+        ├─systemd-logind
+        ├─systemd-network
+        ├─systemd-resolve
+        ├─systemd-udevd
+        ├─unattended-upgr───{unattended-upgr}
+        └─xe-daemon─┬─2*[logger]
+                    └─36*[{xe-daemon}]
+=================================
+
+k25@linux:~$ AA=50
+k25@linux:~$ export BB=100         -- 다른곳에서도 통용되게 하려면 export를 붙이기
+k25@linux:~$ echo $AA, $BB
+50, 100
+k25@linux:~$ bash
+k25@linux:~$ exit
+exit
+
+===========함수도 실행가능
+k25@linux:~$ function my3()
+> {
+> echo "오늘은 좋은 날"
+> }
+k25@linux:~$ my3
+오늘은 좋은 날
+========================
+--vimtutor실행
+
+vimtutor  -g ko       
+
+=======================
+
+k28@linux:~$ vi ~/.bash_aliases (단축어 추가)
+
+alias h='history'
+  2 alias l='ls -AlF'
+  3 alias c='clear'
+  4 alias cp='cp -i'
+  5 alias mv='mv -i'
+  6 alias df='df -h'
+  7 alias du='du -sh'
+  8 alias li='ls -Ali'
+  9 alias lh='ls -Alh'
+ 10 alias uq='tail -7 /etc/passwd && ls /home'
+ 11 #alias date=' date +%Y년%m월%d일::%H시%M분'
+ 12 alias now=' date +%Y년%m월%d일::%H시%M분%S초'
+ 13 alias a='alias'
+ 14 alias l='ls -AlF'
+ 15 alias cat='cat -n'
+
+==========================================
+-설정을 바꾸었다면 다시 적용을 시키는 방법
+
+k28@linux:~$ . ~/.profile
+k28@linux:~$ source ~/.profile
+
+=========================================
+- 히스토리 초기화
+k28@linux:~$ h -c
+
+==================================
+
+k25@linux:~/d2$ alias cat='cat -n'
+
+===================================
+- 단축어 alias, keyword , builti 보기
+
+k25@linux:~/d2$ compgen -a | column
+3       c       df      fgrep   l       li      mv
+a       cat     du      grep    la      ll      now
+alert   cp      egrep   h       lh      ls      uq
+
+k25@linux:~/d2$ compgen -k | column
+if              case            until           time            ]]
+then            esac            do              {               coproc
+else            for             done            }
+elif            select          in              !
+fi              while           function        [[
+
+k25@linux:~/d2$ compgen -b | column
+.               compopt         fg              pushd           trap
+:               continue        getopts         pwd             true
+[               declare         hash            read            type
+alias           dirs            help            readarray       typeset
+bg              disown          history         readonly        ulimit
+bind            echo            jobs            return          umask
+break           enable          kill            set             unalias
+builtin         eval            let             shift           unset
+caller          exec            local           shopt           wait
+cd              exit            logout          source
+command         export          mapfile         suspend
+compgen         false           popd            test
+complete        fc              printf          times
+
+=======================================
+
+k25@linux:~/d2$ echo $SHELL
+/bin/bash
+k25@linux:~/d2$ cat  /etc/shells
+     1  # /etc/shells: valid login shells
+     2  /bin/sh
+     3  /bin/bash
+     4  /bin/rbash
+     5  /bin/dash
+     6  /usr/bin/tmux
+     7  /usr/bin/screen
+
+=================================
+- 명령어
+
+k25@linux:~/d2$ compgen -c | column
+3                                       printf
+a                                       grub-mkrelpath
+alert                                   usbhid-dump
+c                                       from.mailutils
+cat                                     autoreconf
+cp                                      mysqlanalyze
+df                                      unix2dos
+du                                      hd
+egrep                                   dbus-uuidgen
+fgrep                                   mesg
+grep                                    screendump
+h                                       readmsg.mailutils
+l                                       hexdump
+la                                      myisampack
+lh                                      peekfd
+li                                      pod2usage
+ll                                      rdma
+ls                                      pstree
+mv                                      mysql_tzinfo_to_sql
+now                                     apport-unpack
+uq                                      paste
+if                                      cksum
+then                                    mysql_ssl_rsa_setup
+else                                    javap
+elif                                    lcf
+fi                                      mdig
+case                                    manpath
+esac                                    look
+for                                     nice
+select                                  clear_console
+while                                   curl
+until                                   htop
+do                                      htpasswd
+done                                    xzgrep
+in                                      jstat
+function                                grops
+time                                    c99
+{                                       jstack
+}                                       jlink
+!                                       lscpu
+[[                                      snap
+]]                                      x86_64-linux-gnu-cpp-7
+coproc                                  xenstore-write
+__expand_tilde_by_ref                   pathchk
+__get_cword_at_cursor_by_ref            byobu-prompt
+__git_eread                             dwp
+__git_ps1                               basename
+__git_ps1_colorize_gitstring            setsid
+__git_ps1_show_upstream                 ua
+__grub_dir                              gcc-7
+__grub_get_last_option                  movemail.mailutils
+__grub_get_options_from_help            iscsiadm
+__grub_get_options_from_usage           ptx
+__grub_list_menuentries                 byobu-shell
+__grub_list_modules                     printerbanner
+__grubcomp                              g++
+__load_completion                       rotatelogs
+__ltrim_colon_completions               gettext.sh
+__parse_options                         tput
+__reassemble_comp_words_by_ref          uuidgen
+_allowed_groups                         gcov-dump
+_allowed_users                          unicode_stop
+_apport-bug                             mysqlpump
+_apport-cli                             bsd-write
+_apport-collect                         chfn
+_apport-unpack                          instmodsh
+_apport_parameterless                   watch
+_apport_symptoms                        nohup
+_available_interfaces                   mcookie
+_cd                                     mysql
+_cd_devices                             dbus-send
+_command                                dirmngr-client
+_command_offset                         x86_64-linux-gnu-gcc-nm
+_complete_as_root                       ckeygen3
+_completion_loader                      loadkeys
+_configured_interfaces                  messages.mailutils
+_count_args                             od
+_dvd_devices                            sg
+_expand                                 ubuntu-support-status
+_filedir                                shuf
+_filedir_xspec                          nroff
+_fstypes                                x86_64-linux-gnu-objcopy
+_get_comp_words_by_ref                  dh_autotools-dev_updateconfig
+_get_cword                              tset
+_get_first_arg                          perl5.26-x86_64-linux-gnu
+_get_pword                              sha512sum
+_gids                                   byobu-enable
+_grub_editenv                           c_rehash
+_grub_install                           catman
+_grub_mkconfig                          getent
+_grub_mkfont                            mysqldumpslow
+_grub_mkimage                           tasksel
+_grub_mkpasswd_pbkdf2                   aa-exec
+_grub_mkrescue                          debconf
+_grub_probe                             mysqlbinlog
+_grub_script_check                      x86_64-linux-gnu-gcov-dump
+_grub_set_entry                         formail
+_grub_setup                             bsd-from
+_have                                   debconf-apt-progress
+_included_ssh_config_files              mailx
+_init_completion                        taskset
+_installed_modules                      host
+_ip_addresses                           passwd
+_kernel_versions                        mkfifo
+_known_hosts                            sensible-pager
+_known_hosts_real                       dpkg-divert
+_longopt                                rtstat
+_mac_addresses                          dh_autotools-dev_restoreconfig
+_minimal                                htdbm
+_modules                                tsort
+_ncpus                                  x86_64-linux-gnu-gcov-tool-7
+_parse_help                             pygettext3.6
+_parse_usage                            phar.phar
+_pci_ids                                x86_64-linux-gnu-gold
+_pgids                                  man
+_pids                                   uptime
+_pnames                                 pydoc3
+_quote_readline_by_ref                  corelist
+_realcommand                            readelf
+_rl_enabled                             update-mime-database
+_root_command                           b2sum
+_service                                free
+_services                               messages
+_shells                                 lorder
+_signals                                setterm
+_split_longopt                          jshell
+_sysvdirs                               w.procps
+_terms                                  lzfgrep
+_tilde                                  apt-add-repository
+_uids                                   wall
+_upvar                                  test
+_upvars                                 libnetcfg
+_usb_ids                                named-rrchecker
+_user_at_host                           rcp
+_usergroup                              xzdiff
+_userland                               byobu-ulevel
+_variables                              lockfile-create
+_xfunc                                  atrm
+_xinetd_services                        aclocal-1.15
+command_not_found_handle                jmap
+dequote                                 myisam_ftdump
+my3                                     link
+quote                                   unzipsfx
+quote_readline                          myisamlog
+.                                       faillog
+:                                       newgidmap
+[                                       nmap
+alias                                   systemd-cgtop
+bg                                      ctstat
+bind                                    pkexec
+break                                   jdeprscan
+builtin                                 dh_python3-ply
+caller                                  telnet
+cd                                      shasum
+command                                 byobu-launcher
+compgen                                 grub-render-label
+complete                                grub-mkstandalone
+compopt                                 sha224sum
+continue                                grotty
+declare                                 dbus-cleanup-sockets
+dirs                                    systemd-run
+disown                                  xenstore-read
+echo                                    ptargrep
+enable                                  lxcfs
+eval                                    tree
+exec                                    perlbug
+exit                                    unsquashfs
+export                                  xfd
+false                                   objdump
+fc                                      mysqlimport
+fg                                      vim.tiny
+getopts                                 last
+hash                                    sotruss
+help                                    migrate-pubring-from-classic-gpg
+history                                 eject
+jobs                                    tee
+kill                                    gcov
+let                                     keep-one-running
+local                                   from
+logout                                  vmware-hgfsclient
+mapfile                                 ptar
+popd                                    i386
+printf                                  bashbug
+pushd                                   nping
+pwd                                     python3.6m
+read                                    jps
+readarray                               locale-check
+readonly                                pr
+return                                  ipcrm
+set                                     gpg-connect-agent
+shift                                   patch
+shopt                                   lzcmp
+source                                  base32
+suspend                                 sdiff
+test                                    runcon
+times                                   vmware-vgauth-smoketest
+trap                                    igawk
+true                                    helpztags
+type                                    mlocate
+typeset                                 mysqld_safe
+ulimit                                  strace-log-merge
+umask                                   py3versions
+unalias                                 unattended-upgrade
+unset                                   mysqlrepair
+wait                                    sensible-editor
+pam_getenv                              zdump
+update-rc.d                             byobu-select-profile
+accessdb                                vmware-rpctool
+aa-remove-unknown                       env
+dnssec-keyfromlabel                     apropos
+xe-daemon                               nsupdate
+setquota                                whoami
+pkcs11-keygen                           x86_64-linux-gnu-readelf
+grpunconv                               gencat
+tcpdump                                 java
+groupadd                                setkeycodes
+pam-auth-update                         namei
+pam_timestamp_check                     lslocks
+setvesablank                            truncate
+xqmstats                                debconf-show
+update-info-dir                         col9
+ip6tables-apply                         print
+xfs_io                                  install-info
+xfs_rtcp                                zipinfo
+a2enmod                                 python3m
+praliases                               unzip
+xfs_estimate                            sos-collector
+update-initramfs                        apt-extracttemplates
+iucode-tool                             scp
+atd                                     cftp3
+e2freefrag                              dbus-run-session
+irqbalance-ui                           perlthanks
+xfs_mdrestore                           vmtoolsd
+maidag                                  git-receive-pack
+a2disconf                               lsb_release
+zerofree                                lzdiff
+nsight_updater                          gcov-7
+mkinitramfs                             python3.6
+named                                   twistd3
+etrn                                    g++-7
+arp                                     x86_64-linux-gnu-gcc-7
+dnssec-signzone                         debconf-copydb
+rndc                                    chacl
+quotastats                              neqn
+dnssec-revoke                           resolveip
+rndc-confgen                            jconsole
+dnssec-dsfromkey                        x86_64-linux-gnu-gcc-ar
+sshd                                    diff
+init.lxc.static                         grub-editenv
+apache2ctl                              lsusb
+grub-bios-setup                         myisamchk
+named-pkcs11                            x86_64-linux-gnu-gcov-dump-7
+cryptdisks_stop                         ptardiff
+irqbalance                              piconv
+zic                                     phar
+xfs_db                                  my_print_defaults
+acpid                                   debian-distro-info
+named-checkzone                         laptop-detect
+update-passwd                           ul
+makemap                                 vcs-run
+validlocale                             sudo
+xfs_mkfile                              gpasswd
+biosdecode                              cpan
+deluser                                 cc
+adduser                                 catchsegv
+update-java-alternatives                ssh
+dnssec-verify                           hostnamectl
+dnssec-verify-pkcs11                    apt-cache
+addgroup                                htdigest
+apache2                                 edit
+rmt                                     grub-mkimage
+applygnupgdefaults                      xargs
+create-cracklib-dict                    ipcs
+named-checkconf                         setpci
+usermod                                 tmux
+check_forensic                          systemd-stdio-bridge
+useradd                                 updatedb.mlocate
+cracklib-check                          run-one-until-failure
+iscsistart                              dpkg-maintscript-helper
+remove-shell                            resizepart
+pwunconv                                mail
+init.lxc                                splitfont
+grub-set-default-legacy-ec2             lxd
+add-shell                               killall
+purgestat                               lzma
+checksendmail                           mysql_install_db
+cryptdisks_start                        atq
+pkcs11-list                             gcc-nm
+iscsid                                  fold
+a2ensite                                setleds
+pkcs11-destroy                          ld
+tzconfig                                vimtutor
+dnssec-signzone-pkcs11                  gcc-ar-7
+logrotate                               mawk
+runq                                    xprop
+dpkg-preconfigure                       pod2man
+dnssec-coverage                         cut
+e4defrag                                dpkg-statoverride
+popularity-contest                      newuidmap
+update-grub                             systemd-path
+vipw                                    pygettext3
+luksformat                              growpart
+groupmems                               lspci
+nfnl_osf                                byobu-tmux
+update-cracklib                         xfontsel
+cracklib-unpacker                       gcov-tool
+update-grub-gfxpayload                  linux32
+make-bcache                             manifest
+ufw                                     byobu-reconnect-sockets
+aa-status                               phar7.2
+vcstime                                 json_pp
+xfs_logprint                            dirmngr
+grpconv                                 nm
+dnssec-settime                          lockfile-touch
+service                                 xdpyinfo
+hoststat                                h2xs
+update-pciids                           xauth
+xfs_ncheck                              mysqladmin
+overlayroot-chroot                      chrt
+grub-probe                              apt-cdrom
+xfs_fsr                                 chardetect3
+newusers                                x86_64-linux-gnu-c++filt
+userdel                                 time
+cracklib-packer                         ssh-copy-id
+grub-reboot                             infocmp
+tarcat                                  batch
+visudo                                  ifnames
+grub-mkconfig                           routel
+a2enconf                                tr
+e4crypt                                 xdg-user-dirs-update
+quot                                    elfedit
+make-ssl-cert                           deallocvt
+a2query                                 strip
+named-journalprint                      xlsatoms
+dnssec-dsfromkey-pkcs11                 editres
+xfs_metadump                            lzmore
+warnquota                               systemd-mount
+netplan                                 apport-collect
+rmt-tar                                 ar
+xfs_bmap                                pic
+invoke-rc.d                             diff3
+xfs_copy                                unxz
+newaliases                              tracepath
+chpasswd                                lastb
+ddns-confgen                            showconsolefont
+bcache-super-show                       scriptreplay
+iscsi_discovery                         xwininfo
+cpgr                                    grub-kbdcomp
+a2dismod                                perlivp
+xe-linux-distribution                   ex
+dnssec-importkey-pkcs11                 pstree.x11
+rpc.rquotad                             python3
+vpddecode                               less
+phpdismod                               x86_64-linux-gnu-as
+update-locale                           byobu-disable-prompt
+ownership                               rsync
+grub-set-default.real                   ssh-import-id
+locale-gen                              arpaname
+dmidecode                               c99-gcc
+dpkg-reconfigure                        gpg-wks-server
+pwck                                    autoconf
+pwconv                                  base64
+dnssec-settime-pkcs11                   groups
+httxt2dbm                               dpkg
+phpquery                                zipgrep
+xfs_admin                               xzless
+groupdel                                conch3
+upgrade-from-grub-legacy                do-release-upgrade
+update-usbids                           col2
+mailstats                               du
+update-grub2                            tabs
+nsec3hash                               telnet.netkit
+dnsmasq                                 rview
+dnssec-revoke-pkcs11                    kernel-install
+iucode_tool                             innochecksum
+chroot                                  mandb
+fdformat                                gen-preseed
+apparmor_status                         run-this-one
+grub-macbless                           ngettext
+readprofile                             podselect
+pkcs11-tokens                           x86_64-linux-gnu-ld.bfd
+sendmail                                select-editor
+convertquota                            sha384sum
+isc-hmac-fixup                          pmap
+dnssec-importkey                        py3compile
+xfs_growfs                              gprof
+iconvconfig                             unshare
+chronyd                                 jarsigner
+sendmail-msp                            autoscan
+ldattach                                yes
+popcon-largest-unused                   rpcgen
+mysqld                                  resizecons
+dnssec-checkds                          numfmt
+dnssec-keyfromlabel-pkcs11              systemd-delta
+edquota                                 deb-systemd-helper
+cron                                    mapscrn
+groupmod                                unattended-upgrades
+genrandom                               setarch
+grub-install                            jfr
+apachectl                               x86_64-linux-gnu-strings
+dnssec-keymgr                           gcov-dump-7
+named-compilezone                       perl
+chgpasswd                               vmware-checkvm
+arpd                                    setlogcons
+sensible-mda                            ubuntu-core-launcher
+split-logfile                           mtr
+delgroup                                flock
+dnssec-keygen                           x86_64-linux-gnu-gcc-nm-7
+repquota                                loadunimap
+genl                                    mysql_upgrade
+faillock                                pdb3.6
+phpenmod                                byobu-disable
+grub-mkdevicemap                        mail-unlock
+cppw                                    install
+editmap                                 VGAuthService
+grub-set-default                        gpgsm
+chmem                                   screen
+rsyslogd                                nstat
+a2dissite                               xdg-user-dir
+tsig-keygen                             dpkg-query
+update-grub-legacy-ec2                  byobu-select-backend
+sendmail-mta                            colcrt
+update-ca-certificates                  toe
+iscsi-iname                             bootctl
+vigr                                    x86_64-linux-gnu-g++
+xfs_quota                               wget
+addgnupghome                            objcopy
+update-mime                             pwdx
+grpck                                   lzgrep
+cracklib-format                         linux-version
+rtcwake                                 grub-mkpasswd-pbkdf2
+dnssec-keygen-pkcs11                    expand
+xfs_info                                lsipc
+nologin                                 ltrace
+filefrag                                psfaddtable
+iptables-apply                          find
+quota_nld                               locate
+xfs_freeze                              nawk
+sendmailconfig                          xzfgrep
+
+
+=====================================
+-글을 앞 과 뒤만 보고싶을 때
+
+k25@linux:~/d2$ head s
+k25@linux:~/d2$ tail s
+
+k25@linux:~/d2$ head -5 s
+k25@linux:~/d2$ tail -3 s
+
+more s
+less s
+
+q   빠져나오기
+
+=================================
+'abc'순으로 정렬
+
+sort p 
+sort -r p(역순)
+======================================= 
+(word count)
+k25@linux:~/d2$ wc s 
+  591(라인)  2615(단어) 19183(개의 문자) s
+
+k25@linux:~/d2$ wc s -l
+591 s
+k25@linux:~/d2$ wc s -w
+2615 s
+k25@linux:~/d2$ wc s -c
+19183 s
+
+============================================
+
+k25@linux:~/d2$ alias al='apt list --installed'
+
+========================================
+내 컴퓨터에 설치된 프로그램 목록 조회
+apt list --installed > a6
+
+단축어로 설정
+
+ alias al='apt list --installed'
+
+========================================
+k25@linux:~/d2$ grep(조회해라) http(문자열)  s(파일)
+# Updated from http://www.iana.org/assignments/port-numbers and other
+# sources like http://www.freebsd.org/cgi/cvsweb.cgi/src/etc/services .
+http            80/tcp          www             # WorldWideWeb HTTP
+https           443/tcp                         # http protocol over TLS/SSL
+http-alt        8080/tcp        webcache        # WWW caching service
+http-alt        8080/udp
+k25@linux:~/d2$ wc s(파일명)
+  591  2615 19183 s
+
+======================================
+-내 거만 보고 싶을때
+k25@linux:~/d2$ grep k28 a2
+k28      pts/58       2023-06-13 12:55 (222.106.201.70)
+
+=============================
+프로세스 상태 확인
+
+k25@linux:~/d2$ ps -ef
+-파일저장
+k25@linux:~/d2$ ps -ef > a10
+-축약 확인
+k25@linux:~/d2$ wc a10
+  535  4643 34941 a10
+
+-접속상태확인
+k25@linux:~/d2$ grep mysql a10
+mysql      3925      1  0  5월04 ?      00:14:08 /usr/sbin/mysqld --daemonize --pid-file=/run/mysqld/mysqld.pid
+k15       27939  24754  0 10:05 pts/31   00:00:00 mysql -u myk15 -p
+k10       27950  22933  0 10:05 pts/19   00:00:00 mysql -u myk10 -p
+k6        27953  25193  0 10:05 pts/3    00:00:00 mysql -u myk6 -p
+k14       27968  22184  0 10:05 pts/11   00:00:00 mysql -u myk14 -p
+k1        28037  27472  0 10:06 pts/7    00:00:00 mysql -u myk1 -p
+k5        28046  25570  0 10:07 pts/12   00:00:00 mysql -u myk5 -p
+k14       28292  22184  0 10:10 pts/11   00:00:00 mysql -u myk14 -p
+k24       28490  23385  0 10:17 pts/24   00:00:00 mysql -u myk24 -p
+k14       28510  22184  0 10:17 pts/11   00:00:00 mysql -u myk14 -p
+k19       28643  25668  0 10:19 pts/16   00:00:00 mysql -u myk19 -p
+k14       28767  22184  0 10:22 pts/11   00:00:00 mysql -u myk14 -p
+k17       28965  28953  0 10:26 pts/32   00:00:00 mysql -u myk17 -p
+k13       29379  25101  0 10:38 pts/2    00:00:00 mysql -u myk13 -p
+-접속상태확인
+k25@linux:~/d2$ grep apache a10
+www-data  19078  25907  0 06:25 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data  19079  25907  0 06:25 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data  19080  25907  0 06:25 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data  19081  25907  0 06:25 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data  19082  25907  0 06:25 ?        00:00:00 /usr/sbin/apache2 -k start
+root      25907      1  0  5월04 ?      00:00:44 /usr/sbin/apache2 -k start
+
+================
+
+k25@linux:~/d2$ ps -ef > a10  -명령어-결과물 파일에 저장
+k25@linux:~/d2$ grep apache a10 -파일 확인
+k25@linux:~/d2$ w3m localhost 
+w3m: Can't load localhost.
+k25@linux:~/d2$ w3m localhost
+k25@linux:~/d2$ ps -ef | grep apache  - 두명령어를 하나로 합침(|기호를 통해서 |는 pipe라 불림)
+root      50283      1  0 14:56 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data  50288  50283  0 14:56 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data  50289  50283  0 14:56 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data  50290  50283  0 14:56 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data  50291  50283  0 14:56 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data  50292  50283  0 14:56 ?        00:00:00 /usr/sbin/apache2 -k start
+k25       50702  29562  0 14:56 pts/5    00:00:00 grep --color=auto apache
+
+====================
+
+k25@linux:~/d2$ cat > b2
+haha
+hoho
+k25@linux:~/d2$ nl b2
+     1       1  haha
+     2       2  hoho
+
+========================
+
+k25@linux:~/d2$ cat >> b2
+hihi
+hehe
+k25@linux:~/d2$ nl b2
+     1       1  haha
+     2       2  hoho
+     3       1  hihi
+     4       2  hehe
+===========================
+보내기
+k25@linux:~/d2$ cat < b2
+     1       1  haha
+     2       2  hoho
+     3       1  hihi
+     4       2  hehe
+
+==========================
+-셈도 가능
+k25@linux:~/d2$ expr 2 + 3
+5
+k25@linux:~/d2$ expr 2 - 3
+-1
+k25@linux:~/d2$ expr 2 \* 3
+6
+k25@linux:~/d2$ expr 2 * 3
+expr: 문법 오류
+k25@linux:~/d2$ expr 2 '*' 3
+6
+k25@linux:~/d2$ expr 2 "*" 3
+6
+k25@linux:~/d2$ echo $[5 + 7]
+12
+k25@linux:~/d2$ echo $[5 - 7]
+-2
+k25@linux:~/d2$ echo $[5 * 7]
+35
+k25@linux:~/d2$ echo $[5 / 7]
+0
+k25@linux:~/d2$ echo $[50 / 7]
+7
+========================
+
+k25@linux:~/d2$ let b4=3 + 4   -공백불가
+-bash: let: +: syntax error: operand expected (error token is "+")
+k25@linux:~/d2$ let b4=3+4
+k25@linux:~/d2$ echo $b4
+7
+
+k25@linux:~/d2$ echo $[50 & 7]
+2
+k25@linux:~/d2$ echo $[5 & 7]
+5
+k25@linux:~/d2$ echo $[5 | 7]
+7
+
+k25@linux:~/d2$ cat << END > b6
+> 오늘은
+> 화요일
+> 화끈하게 공부하는 날
+> END
+k25@linux:~/d2$ nl b6
+     1       1  오늘은
+     2       2  화요일
+     3       3  화끈하게 공부하는 날
+
+k25@linux:~/d2$ cat << K > b7
+> aa
+> bb
+> cc
+> K
+k25@linux:~/d2$ nl b7
+     1       1  aa
+     2       2  bb
+     3       3  cc
+
+========================
+문자열 개수 확인 (백틱 확인!!!!)
+k25@linux:~/d2$ j='java'
+k25@linux:~/d2$ echo $j
+java
+k25@linux:~/d2$ echo ${#j}
+4
+k25@linux:~/d2$ echo `expr length $j`
+4
+
+k25@linux:~/d2$ date
+2023. 06. 13. (화) 15:23:47 KST
+k25@linux:~/d2$ h2=date
+k25@linux:~/d2$ echo $h2
+date
+k25@linux:~/d2$ h2=`date`
+k25@linux:~/d2$ echo $h2
+2023. 06. 13. (화) 15:24:34 KST
+=======================
+
+k25@linux:~/d2$ echo $j
+java
+k25@linux:~/d2$ echo $j가 좋아요
+java가 좋아요
+k25@linux:~/d2$ echo $j_가 좋아요
+가 좋아요
+k25@linux:~/d2$ echo $j_jsp
+
+k25@linux:~/d2$ echo ${j}_jsp    -{j} 변수임을 알려줌
+java_jsp
+
+====================
+
+k25@linux:~/d2$ find /etc -name "bashrc"
+find: ‘/etc/polkit-1/localauthority’: 허가 거부
+find: ‘/etc/ssl/private’: 허가 거부
+k25@linux:~/d2$ find /etc -name "bashrc" 2>/dev/null   -표준에러를 해제시키는 명령어
+k25@linux:~/d2$ find / -name *.java 2>/dev/null
+
+================
+-필드의 구분을 콜론:으로 구분
+k25@linux:~/d2$ sort -t: -n -k3 p | head(10줄까지만 조회)
+
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+
+=========================
+
+k25@linux:~/d2$ rm -f a* b*
+k25@linux:~/d2$ ls
+httpd-2.4.57.tar.gz  kk3  p  s  t
+k25@linux:~/d2$ rm kk3 p s t
+k25@linux:~/d2$ ls  -  묶 압축되어있음
+httpd-2.4.57.tar.gz
+===========================
+-압축해제
+k25@linux:~/d2$ ls
+httpd-2.4.57.tar.gz
+k25@linux:~/d2$ gunzip httpd-2.4.57.tar.gz
+k25@linux:~/d2$ lh
+합계 43M
+-rw-rw-r-- 1 k25 k25 43M  4월  6 23:46 httpd-2.4.57.tar
+k25@linux:~/d2$ ls
+httpd-2.4.57  httpd-2.4.57.tar
+k25@linux:~/d2$ du httpd-2.4.57
+49M     httpd-2.4.57
+k25@linux:~/d2$ ls httpd-2.4.57
+ABOUT_APACHE     LICENSE           VERSIONING       docs          modules
+Apache-apr2.dsw  Makefile.in       acinclude.m4     emacs-style   os
+Apache.dsw       Makefile.win      ap.d             httpd.dep     server
+BuildAll.dsp     NOTICE            apache_probes.d  httpd.dsp     srclib
+BuildBin.dsp     NWGNUmakefile     build            httpd.mak     support
+CHANGES          README            buildconf        httpd.spec    test
+CMakeLists.txt   README.CHANGES    changes-entries  include
+INSTALL          README.cmake      config.layout    libhttpd.dep
+InstallBin.dsp   README.platforms  configure        libhttpd.dsp
+LAYOUT           ROADMAP           configure.in     libhttpd.mak
+
+
+==========================
+다시 묶기
+k25@linux:~/d2$ ls
+httpd-2.4.57  httpd-2.4.57.tar
+k25@linux:~/d2$ tar cf 3.tar httpd-2.4.57
+k25@linux:~/d2$ lh
+합계 85M
+-rw-rw-r--  1 k25 k25  43M  6월 13 15:48 3.tar
+drwxr-xr-x 13 k25 k25 4.0K  4월  3 01:05 httpd-2.4.57
+-rw-rw-r--  1 k25 k25  43M  4월  6 23:46 httpd-2.4.57.tar
+
+k25@linux:~/d2$ gzip 3.tar
+k25@linux:~/d2$ lh
+합계 52M
+-rw-rw-r--  1 k25 k25 9.4M  6월 13 15:48 3.tar.gz
+drwxr-xr-x 13 k25 k25 4.0K  4월  3 01:05 httpd-2.4.57
+-rw-rw-r--  1 k25 k25  43M  4월  6 23:46 httpd-2.4.57.tar
+
+=======================
+압축
+k25@linux:~/d2$ zip  -r 5.zip httpd-2.4.57
+해제
+k25@linux:~/d2$ unzip -d 55 5.zip
+
+k25@linux:~/d2$ tar cfz 8.tar.gz httpd-2.4.57
+tak25@linux:~/d2$ tar xfz 8.tar.gz
+
+
+-======
+더 빠른 압축
+k25@linux:~/d2$ tar cfJ 9.tar.xz httpd-2.4.57
+
+
+==============
+로그아웃
+
+exit
+ctrl + d
+
+=============
+
+============ virtualbox 실행
+super user : root  #
+일반 user :        $
+
+Ubuntu linux  id : j  , pw : j
+sudo(super user do)
+sudo -i  root로 변경  
+su -     root로 변경  
+
+j@osy:~$ wget
+wget: missing URL
+Usage: wget [OPTION]... [URL]...
+
+Try `wget --help' for more options.
+j@osy:~$ useradd j28
+useradd: Permission denied.
+useradd: cannot lock /etc/passwd; try again later.
+j@osy:~$ sudo useradd j28
+[sudo] password for j: j
+j@osy:~$ sudo passwd j28
+New password: j
+Retype new password: j
+passwd: password updated successfully
+
+j@osy:~$ sudo useradd j3
+j@osy:~$ sudo pas
+passwd      paste       pastebinit
+j@osy:~$ sudo passwd j
+New password:j
+Retype new password:j
+passwd: password updated successfully
+j@osy:~$ ls /home/
+j  lost+found
+j@osy:~$ tail -5  /etc/passwd
+j:x:1000:1000:j:/home/j:/bin/bash
+lxd:x:999:100::/var/snap/lxd/common/lxd:/bin/false
+tomcat:x:998:998:Apache Tomcat:/var/lib/tomcat:/usr/sbin/nologin
+j28:x:1001:1001::/home/j28:/bin/sh
+j3:x:1002:1002::/home/j3:/bin/sh
+
+==================
+j@osy:~$ sudo -i
+root@osy:~# whoami
+root
+
+root@osy:~# useradd j4
+root@osy:~# passwd j4
+New password:j
+Retype new password:j
+passwd: password updated successfully
+root@osy:~# mkdir  /t5
+root@osy:~# ls /
+bin   dev   lib    libx32      mnt   root  snap  t5   var
+boot  etc   lib32  lost+found  opt   run   srv   tmp
+data  home  lib64  media       proc  sbin  sys   usr
+
+
+-===================
+
+
+root@osy:~# vi  /etc/login.defs
+
+
+root@osy:~# vi  /etc/login.defs  => 들어간 창 빈 칸에  CREATE_HOME   yse 입력 후 저장 나온다
+root@osy:~# useradd -D -s  /bin/bash   (명령어로 설정값변경)
+root@osy:~# useradd -D
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/bash
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=no
+
+root@osy:~# useradd j11
+root@osy:~# passwd j11
+New password:j
+Retype new password:j
+passwd: password updated successfully
+
+
+===============
+프로그램이 설치되어있는지 확인
+apt list --installed | grep <apache>
+
+프로그램이 실행중인지 확인
+ps -ef | grep mysql
+
+
+mysql 설치 실행
+apt install mysql-server
+
+-y를 넣으면 자동설치 완료
+apt -y install mysql-server
+
+프로그램 끌때
+root@osy:~# systemctl stop mysql  //start restart status(q로 빠져나온다)
+
+프로그램 삭제
+
+
+================
+연결이 해제되었단 뜻
+root@osy:~# ps -ef | grep mysql
+root        9560    7736  0 17:01 pts/2    00:00:00 grep --color=auto mysql
+
+서비스 시작 안되었단 뜻(start를 해주자)
+root@osy:~# mysql
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+
+=====mysql 연결
+root@osy:~# systemctl start mysql
+root@osy:~# ps -ef | grep mysql
+mysql       9573       1  9 17:02 ?        00:00:00 /usr/sbin/mysqld
+root        9620    7736  0 17:02 pts/2    00:00:00 grep --color=auto mysql
+===mysql 시작
+root@osy:~# mysql
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.33-0ubuntu0.22.04.2 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>   (실행 완료)
+
+=========================
+mysql> select user();
++----------------+
+| user()         |
++----------------+
+| root@localhost |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select now();
++---------------------+
+| now()               |
++---------------------+
+| 2023-06-13 17:03:30 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql>
+====================
+
+mysql> use mysql
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> alter user root@localhost identified with mysql_native_password by 'jj';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create user myace@localhost identified with mysql_native_password by '1';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> grant all privileges on aceDB.* to myace@localhost;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+
+
+======듀플리 케이트
+j@osy:~$ sudo -i
+[sudo] password for j:j
+root@osy:~# useradd ace
+root@osy:~# passwd ace
+New password:
+Retype new password:
+passwd: password updated successfully
+
+============duplicate
+
+ace@osy:~$ mysql -u myace -p1
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.33-0ubuntu0.22.04.2 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database aceDB;
+Query OK, 1 row affected (0.01 sec)
+========================
+DB에서 가장 많이 나는 에러 메세지
+root@osy:~# mysql
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+
+===============
+
+root@osy:~# mysql -u root -p
+Enter password:
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+root@osy:~# mysql -u root -pjj
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 8.0.33-0ubuntu0.22.04.2 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+=================
+ alias aq='apt list --installed | grep '
+
+=================
+
+ pq apache
+  113  systemctl status apache2
+  114  systemctl stop apache2
+  115  pq apache
+  116  systemctl start apache2
+  117  cd
+  118  cd /var/www/html
+  119  /var/www/html# ls
+  
+  123  echo "adsfjklhae" > a2.html
+
+  125  sudo apt update
+  126  sudo apt install apache2
+
+=========================
+
+
+0> j로그인 (pw j)
+sudo -i  // root로 작업
+
+
+1> 사용자 관리 설정 (2개)
+vi  etc/login.defs
+		CREATE_HOME  yes
+useradd -D  -s  /bin/bash
+
+사용자 추가
+ace, k1,k2
+
+2> mysql-server 설치(참고, p165)
+   root-pw 재설정
+   myace 계정 만들기
+   확인 : ace 로그인, mysql 접속 성공 까지
+
+3> apache2 설치 확인
+   없으면 설치 할 것
+   index.html 수정하여 웹에 띄우기
+	/var/www/html/index.html    디렉토리에 위치
+
+4> ncal 조회/삭제/재설치
+   cal 명령어 내렸을 때 정상 작동 하는지 확인
+
+==========================
+
+cd /var/www/html
+
+vi index.html => 들어가서
+
+
+
+<meta charset=utf8>
+<body bgcolor=red text=white><b><br>
+						<hr><br><hr><center> <h2>
+							오늘은 좋은 날.. 오늘을 즐기세요.<br><br>
+							오송이의 집 자주 들러 주세요 <br>
+<hr> <br><br>
+
+
+
+:w! /var/www/html/index.html 
+
+
+
+
+=>입력 저장 후 브라우저에 실행해보기
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

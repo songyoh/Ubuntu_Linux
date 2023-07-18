@@ -1,0 +1,1156 @@
+하고 있는 내용 분량이 많고 대학교 3학년 과정이고..
+어려운게 맞고.. 이해 못하는게 맞고..!!!!!!
+
+에러가 나는게 정상!
+
+putty      --SSL-->    Linux 
+
+계정(id,pw)
+
+       브라우저   --HTTP-->   Linux
+
+HTTP 관리 프로그램:apache2
+==============================
+
+linux 관리자 권한# (일반은 $)
+
+사용자관리, mysql사용자(계정 별개)
+
+==============================
+
+사용자관리, 데이터관리
+프로세스 관리
+마운트
+
+==============================
+
+서버 IP : 106.10.34.15
+포트 1111
+
+===============================
+
+버츄어박스 우분투-sun -> 푸티'my linux'open ->
+
+j /j  로그인
+
+sudo -i
+
+j (password)
+
+whoami
+
+root로 바뀜을 확인
+
+======================
+
+-package (조회,설치,삭제,실행,정보보기)
+
+-process (실행여부)
+
+-system(mount)
+
+-user,group
+
+-소유권,허가권
+
+
+ vi index.html
+
+ apt list --installed  | nl
+ apt list --installed  | grep apache
+ alias aq='apt list --installed | grep'
+ alias pq='ps -ef | grep'
+
+===============================
+정규표현식
+apt list --installed  | grep ^java(java로 시작하는 프로그램이 깔려있는지)
+
+^aa  //aa로 시작하는
+bb$  //bb로 끝나는
+
+==========================프로그램 삭제 및 조회, 재설치
+
+root@sun:~# apt -y remove ncal
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following packages will be REMOVED:
+  ncal
+0 upgraded, 0 newly installed, 1 to remove and 57 not upgraded.
+After this operation, 69.6 kB disk space will be freed.
+(Reading database ... 85242 files and directories currently installed.)
+Removing ncal (12.1.7+nmu3ubuntu2) ...
+Processing triggers for man-db (2.10.2-1) ...
+
+root@sun:~# cal
+Command 'cal' not found, but can be installed with:
+apt install ncal
+
+root@sun:~# apt -y install ncal
+
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  ncal
+0 upgraded, 1 newly installed, 0 to remove and 57 not upgraded.
+Need to get 20.2 kB of archives.
+After this operation, 69.6 kB of additional disk space will be used.
+Get:1 http://kr.archive.ubuntu.com/ubuntu jammy/universe amd64 ncal amd64 12.1.7+nmu3ubuntu2 [20.2 kB]
+Fetched 20.2 kB in 3s (6,847 B/s)
+Selecting previously unselected package ncal.
+(Reading database ... 85234 files and directories currently installed.)
+Preparing to unpack .../ncal_12.1.7+nmu3ubuntu2_amd64.deb ...
+Unpacking ncal (12.1.7+nmu3ubuntu2) ...
+Setting up ncal (12.1.7+nmu3ubuntu2) ...
+Processing triggers for man-db (2.10.2-1) ...
+Scanning processes...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+
+====================================
+아파치 프로그램 삭제(히스토리 조회, 코드만) 아파치란 : 웹서비스
+
+   54  aq apache
+   55  apt remove apache2
+   56  apt remove apache2-bin
+   57  apt remove apache2-data
+   58  apt -y  remove apache2-utils
+
+root@sun:~# aq apache
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+root@sun:~# w3m localhost
+w3m: Can't load localhost.
+root@sun:~# ls /var/www/html
+index.html
+root@sun:~# rm -rf /var/www/html/*
+
+=설치
+
+ai apache2
+aq apache
+
+++브라우저(127.0.0.1)을 보면 실행되어 있지만 아무것도 없는 상태
+
+root@sun:~# cd /var/www/html
+root@sun:/var/www/html# ls
+root@sun:/var/www/html# echo "haha" > b.html
+root@sun:/var/www/html# echo "hoho" > c.html
+root@sun:/var/www/html# mkdir dd
+root@sun:/var/www/html# echo "hihi" > dd/d.html
+root@sun:/var/www/html# echo "Linux" > dd/index.html
+
+
+========================정보가 다 조회되므로 apache로 파일 숨김 작업을 해줘야 한다
+
+모든 홈페이지 첫 번째 파일은 index.html로 이루어 진다.
+
+www.naver.com/index.html로 쳐도 열린다
+
+
+root@sun:/var/www/html# echo "Java ZZang" > /var/www/html/index.html
+
+
+=================시스템 종료
+
+root@sun:/var/www/html# ps -ef | grep apache
+
+
+root@sun:/var/www/html# systemctl stop apache2
+
+
+===================다시켜기
+
+   79  ps -ef | grep apache  조회
+   80  systemctl stop apache2 중지
+   81  systemctl start apache2 시작
+   82  systemctl status apache2  상태조회
+
+====================단축어 조회(새로 로그인 하면 없어진다-세션이 바뀌어서)
+
+root@sun:~# alias pq
+alias pq='ps -ef | grep'
+root@sun:~# alias
+alias ai='apt -y install'
+alias aq='apt list --installed | grep'
+alias c='clear'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias grep='grep --color=auto'
+alias h='history'
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -alF'
+alias ls='ls --color=auto'
+alias pq='ps -ef | grep'
+
+===========================
+
+process란 무엇인가
+
+OS : 자원관리, 프로세스관리
+
+process : PID 
+
+Daemon : Background로 작업 중인 process (httpd...)
+
+=====================계정 2개 생성, 접속자 주소 강제종료시키기
+
+root@sun:~# tail -5 /etc/passwd
+tomcat:x:998:998:Apache Tomcat:/var/lib/tomcat:/usr/sbin/nologin
+k1:x:1001:1001::/home/k1:/bin/sh
+ace:x:1002:1002::/home/ace:/bin/bash
+k2:x:1003:1003::/home/k2:/bin/bash
+mysql:x:116:122:MySQL Server,,,:/nonexistent:/bin/false
+root@sun:~# useradd y1
+root@sun:~# useradd y2
+root@sun:~# passwd y1
+New password:
+Retype new password:
+passwd: password updated successfully
+root@sun:~# passwd y2
+New password:
+Retype new password:
+passwd: password updated successfully
+root@sun:~# passwd y2
+New password:
+Retype new password:
+passwd: password updated successfully
+root@sun:~# ps -ef | grep bash
+j           1224    1223  0 09:52 pts/0    00:00:00 -bash
+root        1236    1235  0 09:53 pts/1    00:00:00 -bash
+j           1332    1331  0 09:54 pts/2    00:00:00 -bash
+root        1368    1367  0 09:56 pts/3    00:00:00 -bash
+y1          5395    5394  0 11:01 pts/4    00:00:00 -bash
+root        5407    1236  0 11:01 pts/1    00:00:00 grep --color=auto bash
+root@sun:~# kill -9 5395
+
+==============================
+
+ctrl+shift + esc (작업관리자 실행)
+
+==============================
+root@sun:~# pstree -pn
+systemd(1)─┬─systemd-journal(369)
+           ├─multipathd(413)─┬─{multipathd}(417)
+           │                 ├─{multipathd}(418)
+           │                 ├─{multipathd}(419)
+           │                 ├─{multipathd}(420)
+           │                 ├─{multipathd}(421)
+           │                 └─{multipathd}(422)
+           ├─systemd-udevd(416)
+           ├─systemd-timesyn(602)───{systemd-timesyn}(609)
+           ├─systemd-network(645)
+           ├─systemd-resolve(647)
+           ├─cron(659)
+           ├─dbus-daemon(660)
+           ├─irqbalance(666)───{irqbalance}(697)
+           ├─networkd-dispat(669)
+           ├─polkitd(670)─┬─{polkitd}(680)
+           │              └─{polkitd}(725)
+           ├─rsyslogd(671)─┬─{rsyslogd}(686)
+           │               ├─{rsyslogd}(687)
+           │               └─{rsyslogd}(688)
+           ├─snapd(674)─┬─{snapd}(908)
+           │            ├─{snapd}(909)
+           │            ├─{snapd}(910)
+           │            ├─{snapd}(911)
+           │            ├─{snapd}(913)
+           │            ├─{snapd}(926)
+           │            ├─{snapd}(927)
+           │            ├─{snapd}(928)
+           │            ├─{snapd}(986)
+           │            ├─{snapd}(992)
+           │            └─{snapd}(1381)
+           ├─systemd-logind(676)
+           ├─udisksd(681)─┬─{udisksd}(723)
+           │              ├─{udisksd}(733)
+           │              ├─{udisksd}(765)
+           │              └─{udisksd}(882)
+           ├─ModemManager(742)─┬─{ModemManager}(769)
+           │                   └─{ModemManager}(773)
+           ├─java(743)─┬─{java}(852)
+           │           ├─{java}(862)
+           │           ├─{java}(864)
+           │           ├─{java}(865)
+           │           ├─{java}(866)
+           │           ├─{java}(867)
+           │           ├─{java}(888)
+           │           ├─{java}(889)
+           │           ├─{java}(890)
+           │           ├─{java}(891)
+           │           ├─{java}(892)
+           │           ├─{java}(893)
+           │           ├─{java}(894)
+           │           ├─{java}(895)
+           │           ├─{java}(896)
+           │           ├─{java}(897)
+           │           ├─{java}(898)
+           │           ├─{java}(899)
+           │           ├─{java}(900)
+           │           ├─{java}(995)
+           │           ├─{java}(996)
+           │           ├─{java}(997)
+           │           ├─{java}(998)
+           │           ├─{java}(999)
+           │           ├─{java}(1000)
+           │           ├─{java}(1001)
+           │           ├─{java}(1002)
+           │           ├─{java}(1003)
+           │           ├─{java}(1004)
+           │           ├─{java}(1005)
+           │           ├─{java}(1008)
+           │           ├─{java}(1009)
+           │           └─{java}(1010)
+           ├─sshd(753)─┬─sshd(1065)───sshd(1223)───bash(1224)───sudo(1233)───su+
+           │           └─sshd(1274)───sshd(1331)───bash(1332)───sudo(1365)───su+
+           ├─unattended-upgr(768)───{unattended-upgr}(883)
+           ├─sendmail-mta(1067)
+           ├─systemd(1082)───(sd-pam)(1083)
+           ├─agetty(1234)
+           ├─packagekitd(1650)─┬─{packagekitd}(1651)
+           │                   └─{packagekitd}(1652)
+           ├─fwupd(4822)─┬─{fwupd}(4832)
+           │             ├─{fwupd}(4857)
+           │             ├─{fwupd}(4858)
+           │             └─{fwupd}(4875)
+           ├─upowerd(4881)─┬─{upowerd}(4883)
+           │               └─{upowerd}(4884)
+           ├─gpg-agent(4928)
+           └─mysqld(5152)─┬─{mysqld}(5156)
+                          ├─{mysqld}(5157)
+                          ├─{mysqld}(5158)
+                          ├─{mysqld}(5159)
+                          ├─{mysqld}(5160)
+                          ├─{mysqld}(5161)
+                          ├─{mysqld}(5162)
+                          ├─{mysqld}(5163)
+                          ├─{mysqld}(5164)
+                          ├─{mysqld}(5165)
+                          ├─{mysqld}(5167)
+                          ├─{mysqld}(5168)
+                          ├─{mysqld}(5169)
+                          ├─{mysqld}(5170)
+                          ├─{mysqld}(5171)
+                          ├─{mysqld}(5172)
+                          ├─{mysqld}(5175)
+                          ├─{mysqld}(5176)
+                          ├─{mysqld}(5177)
+                          ├─{mysqld}(5178)
+                          ├─{mysqld}(5179)
+                          ├─{mysqld}(5180)
+                          ├─{mysqld}(5181)
+                          ├─{mysqld}(5182)
+                          ├─{mysqld}(5183)
+                          ├─{mysqld}(5184)
+                          ├─{mysqld}(5188)
+                          ├─{mysqld}(5189)
+                          ├─{mysqld}(5190)
+                          ├─{mysqld}(5191)
+                          ├─{mysqld}(5192)
+                          ├─{mysqld}(5193)
+                          ├─{mysqld}(5194)
+                          ├─{mysqld}(5195)
+                          ├─{mysqld}(5197)
+                          └─{mysqld}(5198)
+
+===================================
+
+root@sun:~# arch
+x86_64
+root@sun:~# uname
+Linux
+root@sun:~# uname -a
+Linux sun 5.15.0-73-generic #80-Ubuntu SMP Mon May 15 15:18:26 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+root@sun:~# uname -m
+x86_64
+
+root@sun:~# uname -r (커널버전)
+5.15.0-73-generic
+
+=======================버전확인
+
+root@sun:/boot# nl  /etc/issue.net
+     1  Ubuntu 22.04.2 LTS
+
+root@sun:/boot# lsb_releas -a
+Command 'lsb_releas' not found, did you mean:
+  command 'lsb_release' from deb lsb-release (11.1.0ubuntu4)
+Try: apt install <deb name>
+
+===============================
+
+y1,y2의 임의 계정 생성 (pw는 1)
+
+useradd y1
+useradd y2
+passwd y1
+passwd y2
+
+
+
+짝궁 ip 주소 확인하여 putty 에 접속한다.(버츄어 박스는 실행중인 상태-건드리지 않음!!!)
+
+ps -ef | grep bash (로그기록 조회, 현재 접속자 리스트가 나옴)
+
+kill -9 (4자리번호)   (접속자 중 1명을 해제 시키는구문)
+
+=============================
+디스크 용량 확인
+
+root@sun:~# du -sh /etc
+8.2M    /etc
+
+root@sun:~# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           198M  1.1M  197M   1% /run
+/dev/sda4        15G  4.2G  9.8G  31% /
+tmpfs           988M     0  988M   0% /dev/shm
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/sda5       2.9G  120K  2.8G   1% /home
+/dev/sda6       8.8G   24K  8.3G   1% /data
+/dev/sda2       974M  130M  777M  15% /boot
+tmpfs           198M  4.0K  198M   1% /run/user/1000
+
+======================마운트 작업
+
+root@sun:~# alias df='df -h'
+root@sun:~# df
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           198M  1.1M  197M   1% /run
+/dev/sda4        15G  4.2G  9.8G  31% /
+tmpfs           988M     0  988M   0% /dev/shm
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/sda5       2.9G  120K  2.8G   1% /home
+/dev/sda6       8.8G   24K  8.3G   1% /data
+/dev/sda2       974M  130M  777M  15% /boot
+tmpfs           198M  4.0K  198M   1% /run/user/1000
+
+root@sun:~# cd  /data
+root@sun:/data# ls
+lost+found
+root@sun:/data# cp -r  /etc  .
+root@sun:/data# du -sh .
+8.2M    .
+root@sun:/data# cal > a2
+root@sun:/data# ;s
+-bash: syntax error near unexpected token `;'
+root@sun:/data# ls
+a2  etc  lost+found
+root@sun:/data# mkdir d50
+root@sun:/data# ls
+a2  d50  etc  lost+found
+
+root@sun:~# umount  /data
+root@sun:~# mkdir  /d100
+root@sun:~# ls /d100
+root@sun:~# mount -t ext4  /dev/sda6/  /d100
+mount: /d100: special device /dev/sda6/ does not exist (a path prefix is not a directory).
+root@sun:~# mount -t ext4  /dev/sda6  /d100
+root@sun:~# ls  /d100/
+a2  d50  etc  lost+found
+root@sun:~# ls  /data/
+
+====================
+윈도 : c:/boss
+리눅스 : /b2 마운트 해보자
+
+
+SSD ,S-ATA, IDE - hda1, hda2
+sda1, sda2...
+sdb
+
+==파티션 나누기
+
+root@sun:~# fdisk  /dev/sda
+
+Welcome to fdisk (util-linux 2.37.2).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+This disk is currently in use - repartitioning is probably a bad idea.
+It's recommended to umount all file systems, and swapoff all swap
+partitions on this disk.
+
+Help:
+
+  GPT
+   M   enter protective/hybrid MBR
+
+  Generic
+   d   delete a partition
+ 
+   n   add a new partition
+   p   print the partition table
+   t   change a partition type
+   v   verify the partition table
+   i   print information about a partition
+
+  Misc
+   m   print this menu
+   x   extra functionality (experts only)
+
+  Script
+   I   load disk layout from sfdisk script file
+   O   dump disk layout to sfdisk script file
+
+  Save & Exit
+   w   write table to disk and exit
+   q   quit without saving changes
+
+  Create a new label
+   g   create a new empty GPT partition table
+   G   create a new empty SGI (IRIX) partition table
+   o   create a new empty DOS partition table
+   s   create a new empty Sun partition table
+
+
+=========ip주소조회(유동ip)
+
+root@sun:~# ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:d1:0d:47 brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.15/24 metric 100 brd 10.0.2.255 scope global dynamic enp0s3
+       valid_lft 76446sec preferred_lft 76446sec
+    inet6 fe80::a00:27ff:fed1:d47/64 scope link
+       valid_lft forever preferred_lft forever
+
+===============================
+alias 영구적으로 등록
+
+root@sun:~# vi ~/.bash_aliases (라인번호 생성 - 입력-저장 종료 / :se nu - i눌러서 입력+esc - :wq)
+	     source ~/.bash_aliases
+
+===============================
+
+root@sun:~# useradd -D (default값 조회)
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/bash  (/bin/bash로 설정이 안되어(/bin/sh) 있다면  useradd -D -s /bin/bash 로 설정 변경)
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=no
+
+root@sun:~# vi  /etc/login.defs 디폴트 설정 
+CREATE_HOME      yes
+-===================
+
+pwunconv
+nl  /etc/shadow
+nl  /etc/passwd
+pwconv
+nl  /etc/passwd
+nl  /etc/shadow
+nl /etc/group
+vi  /etc/login.defs
+
+ useradd m1
+  passwd m1
+  uq      (alias)
+ll /home/
+ useradd
+nl  /etc/group
+groups m1
+  371  groups m2
+  372  groups m3
+  373  who
+  374  who -q
+  375  users
+  376  w
+  377  finger m1
+  378  ai finger
+  379  alias ai
+  380  finger m1
+  381  uq
+  382  chfn m3
+  383  finger m1
+  384  finger m3
+  385  uq
+  386  useradd m3
+  387  userdel m3
+  388  ll /home
+  389  uq
+  390  userdel -r m2
+  391  userdel -r m1
+  392  uq
+  393  ls /home
+  394  h
+  395  useradd m4
+  396  passwd m4
+  397  uq
+  398  ksh
+  399  ai ksh
+  400  ksh
+  401  nl /etc/shells
+  402  finger m4
+  403  usermod -s /bin/ksh m4
+  404  finger m4
+  405  uq
+  406  usermod -s /bin/bash m4
+  407  usermod -L m4
+  408  usermod -U m4
+
+============================
+m4 계정 확인
+
+root@sun:~# chage -l m4
+마지막으로 암호를 바꾼 날                                       :  6월 14, 2023
+암호 만료                                       : 안함
+암호가 비활성화 기간                                    : 안함
+계정 만료                                               : 안함
+암호를 바꿀 수 있는 최소 날 수          : 0
+암호를 바꿔야 하는 최대 날 수           : 99999
+암호 만료 예고를 하는 날 수             : 7
+
+===========================
+
+root@sun:~# chage
+Usage: chage [options] LOGIN
+
+Options:
+  -d, --lastday LAST_DAY        set date of last password change to LAST_DAY
+  -E, --expiredate EXPIRE_DATE  set account expiration date to EXPIRE_DATE
+  -h, --help                    display this help message and exit
+  -i, --iso8601                 use YYYY-MM-DD when printing dates
+  -I, --inactive INACTIVE       set password inactive after expiration
+                                to INACTIVE
+  -l, --list                    show account aging information
+  -m, --mindays MIN_DAYS        set minimum number of days before password
+                                change to MIN_DAYS
+  -M, --maxdays MAX_DAYS        set maximum number of days before password
+                                change to MAX_DAYS
+  -R, --root CHROOT_DIR         directory to chroot into
+  -W, --warndays WARN_DAYS      set expiration warning days to WARN_DAYS
+
+==========================
+
+root@sun:~# nl  /etc/default/useradd
+     1  # Default values for useradd(8)
+     2  #
+     3  # The SHELL variable specifies the default login shell on your
+     4  # system.
+     5  # Similar to DSHELL in adduser. However, we use "sh" here because
+     6  # useradd is a low level utility and should be as general
+     7  # as possible
+     8  SHELL=/bin/bash
+     9  #
+    10  # The default group for users
+    11  # 100=users on Debian systems
+    12  # Same as USERS_GID in adduser
+    13  # This argument is used when the -n flag is specified.
+    14  # The default behavior (when -n and -g are not specified) is to create a
+    15  # primary user group with the same name as the user being added to the
+    16  # system.
+    17  # GROUP=100
+    18  #
+    19  # The default home directory. Same as DHOME for adduser
+    20  # HOME=/home
+    21  #
+    22  # The number of days after a password expires until the account
+    23  # is permanently disabled
+    24  # INACTIVE=-1
+    25  #
+    26  # The default expire date
+    27  # EXPIRE=
+    28  #
+    29  # The SKEL variable specifies the directory containing "skeletal" user
+    30  # files; in other words, files such as a sample .profile that will be
+    31  # copied to the new user's home directory when it is created.
+    32  # SKEL=/etc/skel
+    33  #
+    34  # Defines whether the mail spool should be created while
+    35  # creating the account
+    36  # CREATE_MAIL_SPOOL=yes
+
+    37  GROUP=100
+    38  HOME=/home
+    39  INACTIVE=-1
+    40  EXPIRE=
+    41  SKEL=/etc/skel
+    42  CREATE_MAIL_SPOOL=no
+
+
+#는 주석문  , 41번라인을 기억하자(skeleton:뼈대)
+===============================
+
+root@sun:~# l /etc/skel
+합계 16K
+-rw-r--r-- 1 root root  220  1월  7  2022 .bash_logout
+-rw-r--r-- 1 root root 3.7K  1월  7  2022 .bashrc
+-rw-r--r-- 1 root root 2.1K 12월  6  2021 .kshrc
+-rw-r--r-- 1 root root  807  1월  7  2022 .profile
+root@sun:~# l ~m4
+합계 24K
+-rw------- 1 m4 m4   12  6월 14 14:56 .bash_history
+-rw-r--r-- 1 m4 m4  220  1월  7  2022 .bash_logout
+-rw-r--r-- 1 m4 m4 3.7K  1월  7  2022 .bashrc
+drwx------ 2 m4 m4 4.0K  6월 14 14:51 .cache/
+-rw-r--r-- 1 m4 m4  807  1월  7  2022 .profile
+-rw------- 1 m4 m4   22  6월 14 14:53 .sh_history
+
+============================
+
+root@sun:~# l /etc/skel
+합계 16K
+-rw-r--r-- 1 root root  220  1월  7  2022 .bash_logout
+-rw-r--r-- 1 root root 3.7K  1월  7  2022 .bashrc
+-rw-r--r-- 1 root root 2.1K 12월  6  2021 .kshrc
+-rw-r--r-- 1 root root  807  1월  7  2022 .profile
+root@sun:~# l ~m4
+합계 24K
+-rw------- 1 m4 m4   12  6월 14 14:56 .bash_history
+-rw-r--r-- 1 m4 m4  220  1월  7  2022 .bash_logout
+-rw-r--r-- 1 m4 m4 3.7K  1월  7  2022 .bashrc
+drwx------ 2 m4 m4 4.0K  6월 14 14:51 .cache/
+-rw-r--r-- 1 m4 m4  807  1월  7  2022 .profile
+-rw------- 1 m4 m4   22  6월 14 14:53 .sh_history
+root@sun:~# useradd m5
+root@sun:~# passwd m5
+새 암호:
+새 암호 재입력:
+passwd: 암호를 성공적으로 업데이트했습니다
+root@sun:~# l /etc/skel
+합계 16K
+-rw-r--r-- 1 root root  220  1월  7  2022 .bash_logout
+-rw-r--r-- 1 root root 3.7K  1월  7  2022 .bashrc
+-rw-r--r-- 1 root root 2.1K 12월  6  2021 .kshrc
+-rw-r--r-- 1 root root  807  1월  7  2022 .profile
+root@sun:~# l ~m5
+합계 16K
+-rw-r--r-- 1 m5 m5  220  1월  7  2022 .bash_logout
+-rw-r--r-- 1 m5 m5 3.7K  1월  7  2022 .bashrc
+-rw-r--r-- 1 m5 m5 2.1K 12월  6  2021 .kshrc
+-rw-r--r-- 1 m5 m5  807  1월  7  2022 .profile
+root@sun:~# vi ~/.vimrc  (vim설정파일 제작)
+root@sun:~# vi ~/.vimrc
+root@sun:~# cp ~/.vimrc  /etc/skel/
+root@sun:~# mkdir /etc/skel/public_html
+root@sun:~# vi /etc/skel/README
+root@sun:~# useradd m6
+root@sun:~# passwd m6
+새 암호:
+새 암호 재입력:
+passwd: 암호를 성공적으로 업데이트했습니다
+root@sun:~# ls /etc/skel
+README  public_html
+
+===================duplicate m6
+m6@sun:~$ ls
+README  public_html
+m6@sun:~$ nl README
+     1  이 계정은 소중합니다.
+     2  잘 사용해 주세요
+     3  허가받지 않은 곳은 방문하지 마세요
+
+     4  매너를 지켜주세요.:
+m6@sun:~$ ls -al
+합계 40
+drwxr-x---  4 m6   m6   4096  6월 14 15:28 .
+drwxr-xr-x 12 root root 4096  6월 14 15:28 ..
+-rw-r--r--  1 m6   m6    220  1월  7  2022 .bash_logout
+-rw-r--r--  1 m6   m6   3771  1월  7  2022 .bashrc
+drwx------  2 m6   m6   4096  6월 14 15:28 .cache
+-rw-r--r--  1 m6   m6   2078 12월  6  2021 .kshrc
+-rw-r--r--  1 m6   m6    807  1월  7  2022 .profile
+-rw-r--r--  1 m6   m6     80  6월 14 15:26 .vimrc
+-rw-r--r--  1 m6   m6    134  6월 14 15:28 README
+drwxr-xr-x  2 m6   m6   4096  6월 14 15:26 public_html
+
+====================================
+
+group : KING
+user : i1 ~ i5
+pw : 1
+메모리 : soft 50M, hard 60M
+
+
+King 그룹 생성
+root@sun:~# groupadd KING
+root@sun:~# tail -7  /etc/group
+y1:x:1004:
+y2:x:1005:
+NC6:x:1007:
+m4:x:1006:
+m5:x:1008:
+m6:x:1009:
+KING:x:1010:
+
+428  useradd -G KING i1
+  429* useradd -G KING i3
+  430  useradd -G KING i2
+  431  useradd -G KING i3
+  432  useradd -G KING i4
+  433  useradd -G KING i5
+  434  passwd i1
+  435  passwd i2
+  436  passwd i3
+  437  passwd i4
+  438  passwd i5
+
+========================KING 그룹 메모리를 설정해야함
+
+root@sun:~# quota (quota 확인)
+root@sun:~# aq quota (quota 버전 확인)
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+quota/jammy,now 4.06-1build2 amd64 [설치됨]
+root@sun:~# ai quota (quota 설치)
+패키지 목록을 읽는 중입니다... 완료
+의존성 트리를 만드는 중입니다... 완료
+상태 정보를 읽는 중입니다... 완료
+패키지 quota는 이미 최신 버전입니다 (4.06-1build2).
+0개 업그레이드, 0개 새로 설치, 0개 제거 및 68개 업그레이드 안 함.
+
+root@sun:~# vi /etc/fstab      <<파일 설정 신중하게 잘 입력해야함>>
+root@sun:~# mount  | grep  /home
+/dev/sda5 on /home type ext4 (rw,relatime)
+root@sun:~# mount -o remount /home
+
+root@sun:~# mount  | grep  /home
+/dev/sda5 on /home type ext4 (rw,relatime,quota,usrquota)
+
+root@sun:~# ls /home/
+ace  i1  i2  i3  i4  i5  j  k2  lost+found  m3  m4  m5  m6  y1  y2
+root@sun:~# quotacheck -augm
+
+root@sun:~# ls /home/
+ace  aquota.user  i1  i2  i3  i4  i5  j  k2  lost+found  m3  m4  m5  m6  y1  y2
+
+root@sun:~# quotaon -aug (on/off 설정 - /data 또는 /home에 aquota.user파일이 안보인다면 )
+root@sun:~# quotaoff -aug (quotaoff -aug 설정을 껐다가 켜보기!!!!!!)
+root@sun:~# quotaon -aug
+
+=========================용량 유예기간 설정
+
+root@sun:~# edquota -t
+root@sun:~# edquota -u i1   (하고서 ^c + enter)
+
+root@sun:~# repquota -a
+*** Report for user quotas on device /dev/sda5
+Block grace time: 7days; Inode grace time: 7days
+                        Block limits                File limits
+User            used    soft    hard  grace    used  soft  hard  grace
+----------------------------------------------------------------------
+root      --      20       0       0              2     0     0
+j         --      28       0       0             10     0     0
+ace       --      16       0       0              4     0     0
+k2        --      16       0       0              4     0     0
+y1        --      20       0       0              6     0     0
+y2        --      16       0       0              4     0     0
+m4        --      28       0       0              8     0     0
+m5        --      20       0       0              5     0     0
+m6        --      52       0       0             14     0     0
+i1        --      32   50000   60000              8     0     0    (i1 설정완료)
+i2        --      32       0       0              8     0     0
+i3        --      32       0       0              8     0     0
+i4        --      32       0       0              8     0     0
+i5        --      36       0       0             10     0     0
+
+
+root@sun:~# edquota -p i1 i{2..5}      (i2~i5 를 i1처럼 설정을 복붙한다)
+root@sun:~# repquota -a
+*** Report for user quotas on device /dev/sda5
+Block grace time: 7days; Inode grace time: 7days
+                        Block limits                File limits
+User            used    soft    hard  grace    used  soft  hard  grace
+----------------------------------------------------------------------
+root      --      20       0       0              2     0     0
+j         --      28       0       0             10     0     0
+ace       --      16       0       0              4     0     0
+k2        --      16       0       0              4     0     0
+y1        --      20       0       0              6     0     0
+y2        --      16       0       0              4     0     0
+m4        --      28       0       0              8     0     0
+m5        --      20       0       0              5     0     0
+m6        --      52       0       0             14     0     0
+i1        --      32   50000   60000              8     0     0
+i2        --      32   50000   60000              8     0     0
+i3        --      32   50000   60000              8     0     0
+i4        --      32   50000   60000              8     0     0
+i5        --      36   50000   60000             10     0     0
+
+
+======================i5 계정으로 돌아가기
+용량초과!
+
+i5@sun:~$ cp -r /usr . 2>/dev/null
+i5@sun:~$ du -sh ~
+59M     /home/i5
+i5@sun:~$ cp -r /etc . 2>/dev/null
+i5@sun:~$ du -sh ~
+59M     /home/i5
+i5@sun:~$ cp -r ./usr/src
+cp: './usr/src' 다음에 대상 파일 명령이 누락됨
+자세한 정보는 'cp --help'를 입력하십시오.
+i5@sun:~$ mkdir dddd
+mkdir: `dddd' 디렉터리를 만들 수 없습니다: 디스크 할당량이 초과됨
+
+
+=======================duplicate (i1)
+
+i1@sun:~$ du -sh
+36K     .
+i1@sun:~$ du -sh ~
+36K     /home/i1
+i1@sun:~$ cp -r /usr  .
+cp: './usr/bin/tmux' 쓰는 중 오류: 디스크 할당량이 초과됨
+....
+
+=======================================
+
+미션
+
+root@sun:~# useradd -D
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/bash
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=no
+
+root@sun:~# useradd -D -b  /data
+root@sun:~# useradd -D
+GROUP=100
+HOME=/data
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/bash
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=no
+
+======================================================================미션
+
+group : NC
+user : n1 ~ n5
+pw : 1
+---
+용량 : soft 10M, hard 20M
+
+=============================
+
+root@sun:~# groupadd BOSS
+root@sun:~# mkdir /d3
+root@sun:~# cd /d3
+root@sun:/d3# cal > a1
+root@sun:/d3# mkdir d1
+root@sun:/d3# l
+합계 8.0K
+-rw-r--r-- 1 root root  193  6월 14 17:14 a1
+- rw- r-- r-- 
+  6   4   4	
+drwxr-xr-x 2 root root 4.0K  6월 14 17:14 d1/
+ rwx r-x r-x
+  7   5   5
+
+root@sun:/d3# cal > a1
+root@sun:/d3# mkdir d1
+root@sun:/d3# l
+합계 8.0K
+-rw-r--r-- 1 root root  193  6월 14 17:14 a1
+drwxr-xr-x 2 root root 4.0K  6월 14 17:14 d1/
+root@sun:/d3# cal > a2
+root@sun:/d3# mkdir d2
+root@sun:/d3# ll
+합계 24
+drwxr-xr-x  4 root root 4096  6월 14 17:15 ./
+drwxr-xr-x 26 root root 4096  6월 14 17:13 ../
+-rw-r--r--  1 root root  193  6월 14 17:14 a1
+-rw-r--r--  1 root root  193  6월 14 17:15 a2
+drwxr-xr-x  2 root root 4096  6월 14 17:14 d1/
+drwxr-xr-x  2 root root 4096  6월 14 17:15 d2/
+
+root@sun:/d3# chown m5 a1
+root@sun:/d3# chown i5 a2
+root@sun:/d3# chgrp BOSS d1
+root@sun:/d3# chgrp KING d2
+root@sun:/d3# l
+합계 16K
+-rw-r--r-- 1 m5   root  193  6월 14 17:14 a1
+-rw-r--r-- 1 i5   root  193  6월 14 17:15 a2
+drwxr-xr-x 2 root BOSS 4.0K  6월 14 17:14 d1/
+drwxr-xr-x 2 root KING 4.0K  6월 14 17:15 d2/
+
+root@sun:/d3# chown i4.BOSS a2
+root@sun:/d3# chown i2.KING d2
+root@sun:/d3# l
+합계 16K
+-rw-r--r-- 1 m5   root  193  6월 14 17:14 a1
+-rw-r--r-- 1 i4   BOSS  193  6월 14 17:15 a2
+drwxr-xr-x 2 root BOSS 4.0K  6월 14 17:14 d1/
+drwxr-xr-x 2 i2   KING 4.0K  6월 14 17:15 d2/
+
+root@sun:/d3# chmod 123 a1
+root@sun:/d3# chmod 456 a2
+root@sun:/d3# chmod 735 d1
+root@sun:/d3# chmod 641 d2
+root@sun:/d3# ll
+합계 24
+d rwx r-x r-x  4 root root 4096  6월 14 17:15 ./
+   7   5   5
+d rwx r-x r-x 26 root root 4096  6월 14 17:13 ../
+   7   5   5
+- --x -w- -wx  1 m5   root  193  6월 14 17:14 a1*
+   1   2   3
+- r-- r-x rw-  1 i4   BOSS  193  6월 14 17:15 a2*
+   4   5   6
+d rwx -wx r-x  2 root BOSS 4096  6월 14 17:14 d1/
+   7   3   5
+d rw- r-- --x  2 i2   KING 4096  6월 14 17:15 d2/
+   6   4    1
+
+root@sun:/d3# whereis date
+date: /usr/bin/date /usr/share/man/man1/date.1.gz
+root@sun:/d3# which cal
+/usr/bin/cal
+root@sun:/d3# l  /usr/bin/cal
+l rwx rwx rwx 1 root root 4  1월 29  2022 /usr/bin/cal -> ncal*
+
+root@sun:/d3# l  /usr/bin/date
+- rwx r-x r-x 1 root root 103K  2월  8  2022 /usr/bin/date*
+root@sun:/d3# chmod 224 /usr/bin/date
+root@sun:/d3# l 224 /usr/bin/date
+ls: '224'에 접근할 수 없음: 그런 파일이나 디렉터리가 없습니다
+--w--w-r-- 1 root root 103K  2월  8  2022 /usr/bin/date
+root@sun:/d3# l  /usr/bin/ncal
+-rwxr-xr-x 1 root root 37K  1월 29  2022 /usr/bin/ncal*
+root@sun:/d3#  l 224 /usr/bin/date
+ls: '224'에 접근할 수 없음: 그런 파일이나 디렉터리가 없습니다
+--w--w-r-- 1 root root 103K  2월  8  2022 /usr/bin/date
+root@sun:/d3# chmod 755  /usr/bin/date
+
+
+=========umask : 사용자가 파일 생성시 자동으로 권한을 조정해주는 값
+
+root@sun:/d3# umask
+0022
+root@sun:/d3# umask 246
+root@sun:/d3# umask
+0246
+root@sun:/d3# mkdir d3
+root@sun:/d3# touch a3
+root@sun:/d3# l
+합계 20K
+---x-w--wx 1 m5   root  193  6월 14 17:14 a1*
+-r--r-xrw- 1 i4   BOSS  193  6월 14 17:15 a2*
+-r---w---- 1 root root    0  6월 14 17:32 a3
+drwx-wxr-x 2 root BOSS 4.0K  6월 14 17:14 d1/
+drw-r----x 2 i2   KING 4.0K  6월 14 17:15 d2/
+dr-x-wx--x 2 root root 4.0K  6월 14 17:32 d3/
+root@sun:/d3# umask 123
+root@sun:/d3# umask
+0123
+root@sun:/d3# mkdir d4
+root@sun:/d3# touch a4
+root@sun:/d3# l
+합계 24K
+---x-w--wx 1 m5   root  193  6월 14 17:14 a1*
+-r--r-xrw- 1 i4   BOSS  193  6월 14 17:15 a2*
+-r---w---- 1 root root    0  6월 14 17:32 a3
+-rw-r--r-- 1 root root    0  6월 14 17:33 a4
+drwx-wxr-x 2 root BOSS 4.0K  6월 14 17:14 d1/
+drw-r----x 2 i2   KING 4.0K  6월 14 17:15 d2/
+dr-x-wx--x 2 root root 4.0K  6월 14 17:32 d3/
+drw-r-xr-- 2 root root 4.0K  6월 14 17:33 d4/
+root@sun:/d3# umask 0022
+root@sun:/d3# umask
+0022
+
+================================
+
+root@sun:/d3# ls
+a1  a2  a3  a4  d1  d2  d3  d4
+root@sun:/d3# chmod u=r,g=x,o=w a1
+root@sun:/d3# l
+합계 24K
+-r----x-w- 1 m5   root  193  6월 14 17:14 a1*
+-r--r-xrw- 1 i4   BOSS  193  6월 14 17:15 a2*
+-r---w---- 1 root root    0  6월 14 17:32 a3
+-rw-r--r-- 1 root root    0  6월 14 17:33 a4
+drwx-wxr-x 2 root BOSS 4.0K  6월 14 17:14 d1/
+drw-r----x 2 i2   KING 4.0K  6월 14 17:15 d2/
+dr-x-wx--x 2 root root 4.0K  6월 14 17:32 d3/
+drw-r-xr-- 2 root root 4.0K  6월 14 17:33 d4/
+
+===============================
+
+오뉴릐 미션(3일차)
+
+▶▶▶1. root alias 설정(~/.bash_aliases)
+	카페 게시글 참고
+	root .vimrc 설정 p.34 참고
+
+▶▶▶1. 한글 locale 설정 p.81 참고
+	timezone 변경 해보기
+
+▶▶▶1. 윈도우 폴더 마운트 할 것
+	c:/rode 만들고, /yes로 마운트
+ mkdir /yes
+
+root@sun:~# mount -t vboxsf rode /yes
+
+root@sun:~# df
+파일 시스템     크기  사용  가용 사용% 마운트위치
+tmpfs           198M  1.1M  197M    1% /run
+/dev/sda4        15G  3.7G   11G   26% /
+tmpfs           988M     0  988M    0% /dev/shm
+tmpfs           5.0M     0  5.0M    0% /run/lock
+/dev/sda2       974M  130M  777M   15% /boot
+/dev/sda5       2.9G   52K  2.8G    1% /home
+/dev/sda6       8.8G   28K  8.3G    1% /data
+tmpfs           198M  4.0K  198M    1% /run/user/1000
+rode            238G  105G  133G   45% /yes
+
+
+▶▶▶1. quota 설정 p.111참고
+	groupadd : IT
+	id : it1 ~ it5
+	soft 20M hard 30M
+
+                        Block limits                File limits
+User            used    soft    hard  grace    used  soft  hard  grace
+----------------------------------------------------------------------
+root      --      20       0       0              2     0     0
+j         --      28       0       0             10     0     0
+it1       --      16   20000   30000              4     0     0
+it2       --      16   20000   30000              4     0     0
+it3       --      16   20000   30000              4     0     0
+it4       --      16   20000   30000              4     0     0
+it5       --      16   20000   30000              4     0     0
+
+
+
+
+▶▶▶1. /etc/skel directory에
+	~/.vimrc 복사
+	public_html 만들기
+
+===============================
+
+
+
+
+
+
+
+
+

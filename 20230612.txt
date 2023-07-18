@@ -1,0 +1,537 @@
+                            2023
+         1월                    2월                    3월
+일 월 화 수 목 금 토  일 월 화 수 목 금 토  일 월 화 수 목 금 토
+ 1  2  3  4  5  6  7            1  2  3  4            1  2  3  4
+ 8  9 10 11 12 13 14   5  6  7  8  9 10 11   5  6  7  8  9 10 11
+15 16 17 18 19 20 21  12 13 14 15 16 17 18  12 13 14 15 16 17 18
+22 23 24 25 26 27 28  19 20 21 22 23 24 25  19 20 21 22 23 24 25
+29 30 31              26 27 28              26 27 28 29 30 31
+
+
+         4월                    5월                    6월
+일 월 화 수 목 금 토  일 월 화 수 목 금 토  일 월 화 수 목 금 토
+                   1      1  2  3  4  5  6               1  2  3
+ 2  3  4  5  6  7  8   7  8  9 10 11 12 13   4  5  6  7  8  9 10
+ 9 10 11 12 13 14 15  14 15 16 17 18 19 20  11 12 13 14 15 16 17
+16 17 18 19 20 21 22  21 22 23 24 25 26 27  18 19 20 21 22 23 24
+23 24 25 26 27 28 29  28 29 30 31           25 26 27 28 29 30
+30
+
+         7월                    8월                    9월
+일 월 화 수 목 금 토  일 월 화 수 목 금 토  일 월 화 수 목 금 토
+                   1         1  2  3  4  5                  1  2
+ 2  3  4  5  6  7  8   6  7  8  9 10 11 12   3  4  5  6  7  8  9
+ 9 10 11 12 13 14 15  13 14 15 16 17 18 19  10 11 12 13 14 15 16
+16 17 18 19 20 21 22  20 21 22 23 24 25 26  17 18 19 20 21 22 23
+23 24 25 26 27 28 29  27 28 29 30 31        24 25 26 27 28 29 30
+30 31
+
+        10월                   11월                   12월
+일 월 화 수 목 금 토  일 월 화 수 목 금 토  일 월 화 수 목 금 토
+ 1  2  3  4  5  6  7            1  2  3  4                  1  2
+ 8  9 10 11 12 13 14   5  6  7  8  9 10 11   3  4  5  6  7  8  9
+15 16 17 18 19 20 21  12 13 14 15 16 17 18  10 11 12 13 14 15 16
+22 23 24 25 26 27 28  19 20 21 22 23 24 25  17 18 19 20 21 22 23
+29 30 31              26 27 28 29 30        24 25 26 27 28 29 30
+                                            31
+
+whoami
+
+who
+
+cal
+cal 2023
+
+j28@ace:~$ cal 02 1993 ( cal 생월 생년)
+      2월 1993
+일 월 화 수 목 금 토
+    1  2  3  4  5  6
+ 7  8  9 10 11 12 13
+14 15 16 17 18 19 20
+21 22 23 24 25 26 27
+28
+
+
+wall <- 대화 시작 구문(단체톡개념)
+
+j28@ace:~$ pwd                 내 위치 확인
+/home/j28
+
+ echo  $HOME                      $HOME은 변수
+/home/j28
+
+ mkdir d1 && cd d1                  디렉토리 제작
+
+=============================자바 코딩하기
+
+j28@ace:~/d1$ cat > jj.java
+public class jjj {
+        public static void main(String[] args){
+                System.out.println("자바가 좋아요!");
+        }
+}
+j28@ace:~/d1$ nl jj.java
+     1  public class jj {
+     2          public static void main(String[] str){
+     3                  System.out.println("자바가 좋아요!");
+     4          }
+     5  }
+
+j28@ace:~/d1$ javac jj.java
+j28@ace:~/d1$ ll
+합계 16
+drwxrwxr-x 2 j28 j28 4096  6월 12 10:45 ./
+drwxr-x--- 4 j28 j28 4096  6월 12 10:41 ../
+-rw-rw-r-- 1 j28 j28  418  6월 12 10:45 jj.class
+-rw-rw-r-- 1 j28 j28  109  6월 12 10:44 jj.java
+j28@ace:~/d1$ java jj
+자바가 좋아요!
+
+===========================자바는 앞으로 이렇게....
+
+
+====================sql 시작
+j28@ace:~$ sqlite
+SQLite version 2.8.17
+Enter ".help" for instructions
+
+sqlite> .open myDB
+unknown command or invalid arguments:  "open". Enter ".help" for help
+
+sqlite> create table
+   ...> man(name char(20), age int);
+
+
+sqlite> insert into man values("흥민이", 33);
+sqlite> insert into man values("강인이", 23);
+
+sqlite> select * from man;
+흥민이|33
+강인이|23
+
+sqlite> .q
+
+j28@ace:~$ whoami
+j28
+
+j28@ace:~$ w3m localhost       (텍스트 브라우저 확인)
+
+
+ who | sort
+
+who am i
+whoami
+rm -rf d1
+ls
+history
+clear
+
+ls -ASRl   /         
+!!
+cal
+cal > a2   
+ls    (=dir과 같다)
+nl a2  "내용볼때"
+cat a2  "내용볼때"
+date
+
+---------------------------
+stdin  표준 입력 키보드 0
+stdout 표준 출력 모니터 1
+stderr 표준 에러 모니터 2
+---------------------------
+
+&& and 논리연산자
+|| or
+
+j28@ace:~$ cal
+      6월 2023
+일 월 화 수 목 금 토
+             1  2  3
+ 4  5  6  7  8  9 10
+11 12 13 14 15 16 17
+18 19 20 21 22 23 24
+25 26 27 28 29 30
+
+j28@ace:~$ cal > a2
+j28@ace:~$ ls
+a2  jjj.class  jjj.java
+j28@ace:~$ nl a2
+     1        6월 2023
+     2  일 월 화 수 목 금 토
+     3               1  2  3
+     4   4  5  6  7  8  9 10
+     5  11 12 13 14 15 16 17
+     6  18 19 20 21 22 23 24
+     7  25 26 27 28 29 30
+     8
+j28@ace:~$ cat a2
+      6월 2023
+일 월 화 수 목 금 토
+             1  2  3
+ 4  5  6  7  8  9 10
+11 12 13 14 15 16 17
+18 19 20 21 22 23 24
+25 26 27 28 29 30
+
+j28@ace:~$ date
+2023. 06. 12. (월) 11:11:18 KST
+
+j28@ace:~$ stdin
+stdin: 명령을 찾을 수 없습니다
+
+j28@ace:~$ stdout
+stdout: 명령을 찾을 수 없습니다
+
+j28@ace:~$ ls
+a2  jjj.class  jjj.java
+
+j28@ace:~$ date
+2023. 06. 12. (월) 11:12:57 KST
+
+j28@ace:~$ date > a4
+j28@ace:~$ nl a4
+     1  2023. 06. 12. (월) 11:13:05 KST
+
+j28@ace:~$ cd
+j28@ace:~$ rm -rf d1
+j28@ace:~$ cd
+j28@ace:~$ mkdir d1 && cd d1
+j28@ace:~/d1$ date && cal
+2023. 06. 12. (월) 11:14:37 KST
+      6월 2023
+일 월 화 수 목 금 토
+             1  2  3
+ 4  5  6  7  8  9 10
+11 12 13 14 15 16 17
+18 19 20 21 22 23 24
+25 26 27 28 29 30
+
+j28@ace:~/d1$ date && cal
+2023. 06. 12. (월) 11:14:52 KST
+      6월 2023
+일 월 화 수 목 금 토
+             1  2  3
+ 4  5  6  7  8  9 10
+11 12 13 14 15 16 17
+18 19 20 21 22 23 24
+25 26 27 28 29 30
+
+j28@ace:~/d1$ dade || cal
+명령어 'dade' 을(를) 찾을 수 없습니다. 다음 명령어로 시도하시겠습니까:
+  deb yadeyade의 명령어 ' (2022.01a-7)'
+  deb davelibhttp-dav-perl의 명령어 ' (0.49-2)'
+  deb datecoreutils의 명령어 ' (8.32-4.1ubuntu1)'
+Try: apt install <deb name>
+      6월 2023
+일 월 화 수 목 금 토
+             1  2  3
+ 4  5  6  7  8  9 10
+11 12 13 14 15 16 17
+18 19 20 21 22 23 24
+25 26 27 28 29 30
+
+
+vi my.c                      + enter(C언어 입력창이 실행된다)
+
+     1  #include <stdio.h>
+     2  int main(void)
+     3  {
+     4          puts("C언어 Good !! \n");
+     5          return 0;
+     6  }
+:x
+j28@ace:~/d1$ nl my.c
+                                                  "c언어 입력시 'i(insert)'를 누르고 입력 해야 함!!"
+     1  #include <stdio.h>
+     2  int main(void)
+     3  {
+     4          puts("C언어 Good !! \n");
+     5          return 0;
+     6  }
+
+j28@ace:~/d1$ gcc my.c -o my          "오류가 안났다면 잘 된 것"
+
+
+리눅스는 3가지로 구분할 수 있다.
+커널
+명령 해석하는 SHELL
+응용 프로그램
+
+alias h=history
+
+j28@ace:~$ alias c=clear                      alias 단축어 생성
+j28@ace:~$ alias l='ls -Al'
+j28@ace:~$ l
+합계 48
+-rw------- 1 j28 j28 1680  6월 12 13:21 .bash_history
+-rw-r--r-- 1 j28 j28  220  1월  7  2022 .bash_logout
+-rw-r--r-- 1 j28 j28 3771  1월  7  2022 .bashrc
+drwx------ 2 j28 j28 4096  6월 12 09:59 .cache
+-rw------- 1 j28 j28   20  6월 12 13:10 .lesshst
+-rw-r--r-- 1 j28 j28  807  1월  7  2022 .profile
+-rw------- 1 j28 j28  228  6월 12 10:56 .sqlite_history
+-rw------- 1 j28 j28 1105  6월 12 11:27 .viminfo
+-rw-r--r-- 1 j28 j28   80 12월 29 17:42 .vimrc
+drwx------ 2 j28 j28 4096  6월 12 11:02 .w3m
+-rw-rw-r-- 1 j28 j28  420  6월 12 10:50 jjj.class
+-rw-rw-r-- 1 j28 j28  139  6월 12 10:49 jjj.java
+
+
+j28@ace:~$ rm -rf *                전체 삭제
+
+============================================================
+
+  300  rename s/.conf/.999/  *.conf
+					-> rename 명령어				
+  306  rename s/.conf/.444/  *.conf
+
+============================================================
+
+*정렬(접속한 user목록 조회)
+j28@ace:~/d1$ who | sort
+j        pts/1        2023-06-12 14:19 (10.0.2.2)
+j        pts/2        2023-06-12 14:19 (10.0.2.2)
+j10      pts/8        2023-06-12 14:20 (10.0.2.2)
+j11      pts/21       2023-06-12 14:26 (10.0.2.2)
+j13      pts/22       2023-06-12 14:26 (10.0.2.2)
+j14      pts/9        2023-06-12 14:20 (10.0.2.2)
+j15      pts/18       2023-06-12 14:20 (10.0.2.2)
+j16      pts/0        2023-06-12 14:19 (10.0.2.2)
+j17      pts/14       2023-06-12 14:20 (10.0.2.2)
+j17      pts/24       2023-06-12 14:26 (10.0.2.2)
+j19      pts/15       2023-06-12 15:03 (10.0.2.2)
+j2       pts/10       2023-06-12 14:20 (10.0.2.2)
+j20      pts/5        2023-06-12 14:20 (10.0.2.2)
+j22      pts/3        2023-06-12 14:19 (10.0.2.2)
+j23      pts/19       2023-06-12 14:21 (10.0.2.2)
+j24      pts/20       2023-06-12 14:21 (10.0.2.2)
+j27      pts/17       2023-06-12 15:26 (10.0.2.2)
+j28      pts/6        2023-06-12 14:20 (10.0.2.2)
+j3       pts/12       2023-06-12 14:20 (10.0.2.2)
+j40      pts/7        2023-06-12 14:20 (10.0.2.2)
+j5       pts/11       2023-06-12 14:20 (10.0.2.2)
+j6       pts/16       2023-06-12 14:20 (10.0.2.2)
+j7       pts/23       2023-06-12 14:26 (10.0.2.2)
+j8       pts/4        2023-06-12 14:20 (10.0.2.2)
+j9       pts/13       2023-06-12 14:20 (10.0.2.2)
+
+===========================================================
+
+*C언어 작성
+j28@ace:~/d1$ cd
+j28@ace:~$ rm -rf d1
+j28@ace:~$ mkdir ~/d1 && cd ~/d1
+j28@ace:~/d1$ vi my.c
+j28@ace:~/d1$ nl my.c
+     1  #include <stdio.h>
+     2  int main(void)
+     3  {
+     4          puts("C언어 Good!!! \n");
+     5          return 0;
+     6  }
+
+j28@ace:~/d1$ gcc my.c -o my
+j28@ace:~/d1$ ./my
+C언어 Good!!!
+
+========================================================
+
+* file 종류 확인
+j28@ace:~/d1$ ls
+my  my.c
+j28@ace:~/d1$ file my
+my: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked,
+ interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ef098d41fca7aee997d6dd3d8bcb
+2171c962ecf7, for GNU/Linux 3.2.0, not stripped
+
+j28@ace:~/d1$ file my.c
+my.c: C source, Unicode text, UTF-8 text
+
+
+========================================================
+
+*c언어 파일 텍스트 파일로 볼 수 있는지
+
+j28@ace:~/d1$ cat my.c
+#include <stdio.h>
+int main(void)
+{
+        puts("C언어 Good!!! \n");
+        return 0;
+}
+
+=======================================================
+
+*.java -> class -> exe
+
+my.c -> my
+
+
+ java변수의 타입
+int[] a = new int[5];  //reference 참조형
+int b;  // primitive 
+char
+int a = 5; // 일반변수
+int* p =&a; // point타입
+int& b=a;  
+
+==========================
+* file 의 종류를 나타낼때 
+
+j28@ace:~/d1$ ll  /dev/tty
+crw-rw-rw- 1 root tty 5, 0  6월 12 15:41 /dev/tty
+j28@ace:~/d1$ ll  /dev/sda2
+brw-rw---- 1 root disk 8, 2  6월 12 14:18 /dev/sda2
+
+==========================
+
+*소켓파일 조회
+j28@ace:~/d1$ file /run/snapd.socket
+/run/snapd.socket: socket
+
+
+j28@ace:~/d1$ file /run/
+NetworkManager/    dmeventd-client    multipathd.pid     snapd.socket
+agetty.reload      dmeventd-server    mysqld/            sshd/
+apache2/           fsck/              needrestart/       sshd.pid
+blkid/             initctl            netns/             sudo/
+cloud-init/        initramfs/         network/           systemd/
+console-setup/     lock/              screen/            tmpfiles.d/
+credentials/       log/               sendmail/          udev/
+crond.pid          lvm/               sendsigs.omit.d/   udisks2/
+crond.reboot       motd.dynamic       shm/               user/
+cryptsetup/        mount/             snapd/             utmp
+dbus/              multipath/         snapd-snap.socket  uuidd/
+j28@ace:~/d1$ file /run/dmeventd-client
+/run/dmeventd-client: fifo (named pipe)
+
+
+=========================
+
+j28@ace:~/d1$ alias li='ls -AliF'
+j28@ace:~/d1$ li
+합계 20
+393258 -rwxrwxr-x 1 j28 j28 15960  6월 12 15:39 my*
+393259 -rw-rw-r-- 1 j28 j28    79  6월 12 15:38 my.c
+j28@ace:~/d1$ PATH=$PATH:.
+j28@ace:~/d1$ my
+C언어 Good!!!
+
+j28@ace:~/d1$ li
+합계 20
+393258 -rwxrwxr-x 1 j28 j28 15960  6월 12 15:39 my*
+393259 -rw-rw-r-- 1 j28 j28    79  6월 12 15:38 my.c
+j28@ace:~/d1$ cp my my2
+j28@ace:~/d1$ li
+합계 36
+393258 -rwxrwxr-x 1 j28 j28 15960  6월 12 15:39 my*
+393259 -rw-rw-r-- 1 j28 j28    79  6월 12 15:38 my.c
+393288 -rwxrwxr-x 1 j28 j28 15960  6월 12 16:05 my2*
+j28@ace:~/d1$ my2
+C언어 Good!!!
+
+j28@ace:~/d1$ my
+C언어 Good!!!
+
+j28@ace:~/d1$ ln my my5
+j28@ace:~/d1$ li
+합계 52
+393258 -rwxrwxr-x 2 j28 j28 15960  6월 12 15:39 my*
+393259 -rw-rw-r-- 1 j28 j28    79  6월 12 15:38 my.c
+393288 -rwxrwxr-x 1 j28 j28 15960  6월 12 16:05 my2*
+393258 -rwxrwxr-x 2 j28 j28 15960  6월 12 15:39 my5*
+j28@ace:~/d1$ ln -s  my my7
+j28@ace:~/d1$ li
+합계 52
+393258 -rwxrwxr-x 2 j28 j28 15960  6월 12 15:39 my*
+393259 -rw-rw-r-- 1 j28 j28    79  6월 12 15:38 my.c
+393288 -rwxrwxr-x 1 j28 j28 15960  6월 12 16:05 my2*
+393258 -rwxrwxr-x 2 j28 j28 15960  6월 12 15:39 my5*
+393293 lrwxrwxrwx 1 j28 j28     2  6월 12 16:07 my7 -> my*
+j28@ace:~/d1$ file my7
+my7: symbolic link to my
+
+j28@ace:~/d1$ ln my5 my
+j28@ace:~/d1$ li
+합계 84
+393258 -rwxrwxr-x 4 j28 j28 15960  6월 12 15:39 my*
+393259 -rw-rw-r-- 1 j28 j28    79  6월 12 15:38 my.c
+393288 -rwxrwxr-x 1 j28 j28 15960  6월 12 16:05 my2*
+393258 -rwxrwxr-x 4 j28 j28 15960  6월 12 15:39 my4*
+393258 -rwxrwxr-x 4 j28 j28 15960  6월 12 15:39 my5*
+393258 -rwxrwxr-x 4 j28 j28 15960  6월 12 15:39 my6*
+393293 lrwxrwxrwx 1 j28 j28     2  6월 12 16:07 my7 -> my*
+
+==========================================================
+
+j28@ace:~/d1$ ln -s  /etc/vim/  77
+j28@ace:~/d1$ ls
+77  my  my.c  my2  my4  my5  my6  my7
+j28@ace:~/d1$ ll
+합계 92
+drwxrwxr-x 2 j28 j28  4096  6월 12 16:17 ./
+drwxr-x--- 5 j28 j28  4096  6월 12 15:38 ../
+lrwxrwxrwx 1 j28 j28     9  6월 12 16:17 77 -> /etc/vim//
+-rwxrwxr-x 4 j28 j28 15960  6월 12 15:39 my*
+-rw-rw-r-- 1 j28 j28    79  6월 12 15:38 my.c
+-rwxrwxr-x 1 j28 j28 15960  6월 12 16:05 my2*
+-rwxrwxr-x 4 j28 j28 15960  6월 12 15:39 my4*
+-rwxrwxr-x 4 j28 j28 15960  6월 12 15:39 my5*
+-rwxrwxr-x 4 j28 j28 15960  6월 12 15:39 my6*
+lrwxrwxrwx 1 j28 j28     2  6월 12 16:07 my7 -> my*
+
+=============================================
+j@osy:~$ sudo -i
+[sudo] password for j:
+root@osy:~# gcc
+Command 'gcc' not found, but can be installed with:
+apt install gcc
+root@osy:~# password
+Command 'password' not found, did you mean:
+  command '1password' from snap 1password (8.9.12)
+  command 'assword' from deb assword (0.12.2-1)
+See 'snap info <snapname>' for additional versions.
+root@osy:~# jj
+jj: command not found
+root@osy:~# passwd
+New password:
+Retype new password:
+passwd: password updated successfully
+
+root@osy:~# timedatectl set-timezone Asia/Seoul
+root@osy:~# date
+Mon Jun 12 05:41:43 PM KST 2023
+root@osy:~# cd  /etc
+root@osy:/etc# cd  /dasfadsf
+-bash: cd: /dasfadsf: No such file or directory
+
+root@osy:/etc# apt -y install gcc g++ default-jdk \
+> tomcat9 lynx w3m sendmail glibc-doc apache2 \
+> sqlite quota rdate rename tree mailutils \
+> vim man-db
+
+
+
+
+=============
+j@osy:~$ su -
+Password: jj 
+
+root@osy:~# apt list --installed | wc -l
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+610  ==>설치된 패키지 개수
+
+=================================
+
++
+
+
+\\192.168.0.196 
+
+
+
+
+ 

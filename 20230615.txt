@@ -1,0 +1,1271 @@
+[[Setting]]
+sudo apt update     
+
+alias등록     (브라우저 ctrl+c  ==> 리눅스 실행창 마우스 우클릭)
+
+mysql 다운로드
+
+한글 locale설정 - 재실행 p181
+
+** 지난시간..
+systemctl...
+ps -ef...
+top
+
+*cmd 창에서 윈도우 off하기 (ex. 3000초 이후에 종료한다.)
+->>  shutdown -s -t 3000
+
+*소유권, 허가권 rwx , umask 0022
+
+at  예약
+cron 반복
+
+make 
+
+====================
+p.119  Sticky bit
+
+nslookup  naver.com
+===================prompt status 바꾸기
+
+root@sun:~# echo $PS1
+\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\w\$
+root@sun:~# PS1='[\! @ \u \w]\$ '
+
+========================useradd h1~h2
+
+[86 @ root ~]# useradd h1
+[87 @ root ~]# useradd h2
+[88 @ root ~]# passwd h1
+새 암호:
+새 암호 재입력:
+passwd: 암호를 성공적으로 업데이트했습니다
+[89 @ root ~]# passwd h2
+새 암호:
+새 암호 재입력:
+passwd: 암호를 성공적으로 업데이트했습니다
+
+=======================
+
+useradd -D -s /bin/bash
+useradd -s /bin/bash h1
+useradd -s /bin/bash h2
+
+vi  /etc/login.defs
+	CREATE_HOME	yes
+
+========================
+
+디렉토리에서의 실행권한 x 그 디렉토리 안으로 진입 한다
+
+[131 @ root /y5]# mkdir  /GG
+[132 @ root /y5]# chmod 1777  /GG
+[133 @ root /y5]# l  /
+합계 96K
+drwxrwxrwt   2 root  root  4.0K  6월 15 10:20 GG/
+
+==================권한이 4000번 이상인 자료만 찾을 것, 하나씩
+
+[159 @ root ~]# find  /  -perm  -4000 -exec ls -al {} \;
+
+===============================
+p.121
+
+[163 @ root ~]# mkdir d4
+[164 @ root ~]# cd d4
+[165 @ root ~/d4]# cal > a1
+[166 @ root ~/d4]# date >a2
+[167 @ root ~/d4]# l
+합계 8.0K
+-rw-r--r-- 1 root root 193  6월 15 11:02 a1
+-rw-r--r-- 1 root root  33  6월 15 11:02 a2
+[168 @ root ~/d4]# lsattr
+--------------e------- ./a2
+--------------e------- ./a1
+[169 @ root ~/d4]# chattr +i a  (파일을 다른사람이 수정 못하도록 잠근 것)
+chattr: 그런 파일이나 디렉터리가 없습니다 while trying to stat a
+[170 @ root ~/d4]# chattr +i a1
+[171 @ root ~/d4]# lsattr
+--------------e------- ./a2
+----i---------e------- ./a1
+
+=======================
+p.123 log 관리
+
+ 1 # see "man logrotate" for details
+  2
+  3 # global options do not affect preceding include directives
+  4
+  5 # rotate log files weekly
+  6 weekly
+  7
+  8 # use the adm group by default, since this is the owning group
+  9 # of /var/log/syslog.
+ 10 su root adm
+ 11
+ 12 # keep 4 weeks worth of backlogs
+ 13 rotate 4
+ 14
+ 15 # create new (empty) log files after rotating old ones
+ 16 create
+ 17
+ 18 # use date as a suffix of the rotated file
+ 19 #dateext
+ 20
+ 21 # uncomment this if you want your log files compressed
+ 22 #compress
+ 23
+24 # packages drop log rotation information into this directory
+ 25 include /etc/logrotate.d
+ 26
+ 27 # system-specific logs may also be configured here.
+
+:q!   (강제종료)
+
+[174 @ root ~/d4]# vi  /etc/logrotate.conf
+[175 @ root ~/d4]# cd  /etc/logrotate.conf
+-bash: cd: /etc/logrotate.conf: 디렉터리가 아닙니다
+[176 @ root ~/d4]# ls
+a1  a2
+[177 @ root ~/d4]# cd  /etc/logrotate.d/
+[178 @ root /etc/logrotate.d]# ls
+alternatives  apt      dpkg          tomcat9                 unattended-upgrades
+apache2       bootlog  mysql-server  ubuntu-advantage-tools  wtmp
+apport        btmp     rsyslog       ufw
+
+============================logrotate 옵션
+
+[179 @ root /etc/logrotate.d]# nl apache2
+     1  /var/log/apache2/*.log {
+     2      daily
+     3      missingok
+     4      rotate 14
+     5      compress
+     6      delaycompress
+     7      notifempty
+     8      create 640 root adm
+     9      sharedscripts
+    10      prerotate
+    11          if [ -d /etc/logrotate.d/httpd-prerotate ]; then
+    12              run-parts /etc/logrotate.d/httpd-prerotate
+    13          fi
+    14      endscript
+    15      postrotate
+    16          if pgrep -f ^/usr/sbin/apache2 > /dev/null; then
+    17              invoke-rc.d apache2 reload 2>&1 | logger -t apache2.logrotate
+    18          fi
+    19      endscript
+    20  }
+
+
+==========================모니터링 로그기록 확인(로그는 쌓인다)
+
+[180 @ root /etc/logrotate.d]# lastlog
+사용자이름       포트     어디서           최근정보
+root                                       **한번도 로그인한 적이 없습니다**
+daemon                                     **한번도 로그인한 적이 없습니다**
+bin                                        **한번도 로그인한 적이 없습니다**
+sys                                        **한번도 로그인한 적이 없습니다**
+sync                                       **한번도 로그인한 적이 없습니다**
+games                                      **한번도 로그인한 적이 없습니다**
+man                                        **한번도 로그인한 적이 없습니다**
+lp                                         **한번도 로그인한 적이 없습니다**
+mail                                       **한번도 로그인한 적이 없습니다**
+news                                       **한번도 로그인한 적이 없습니다**
+uucp                                       **한번도 로그인한 적이 없습니다**
+proxy                                      **한번도 로그인한 적이 없습니다**
+www-data                                   **한번도 로그인한 적이 없습니다**
+backup                                     **한번도 로그인한 적이 없습니다**
+list                                       **한번도 로그인한 적이 없습니다**
+irc                                        **한번도 로그인한 적이 없습니다**
+gnats                                      **한번도 로그인한 적이 없습니다**
+nobody                                     **한번도 로그인한 적이 없습니다**
+_apt                                       **한번도 로그인한 적이 없습니다**
+systemd-network                            **한번도 로그인한 적이 없습니다**
+systemd-resolve                            **한번도 로그인한 적이 없습니다**
+messagebus                                 **한번도 로그인한 적이 없습니다**
+systemd-timesync                           **한번도 로그인한 적이 없습니다**
+pollinate                                  **한번도 로그인한 적이 없습니다**
+sshd                                       **한번도 로그인한 적이 없습니다**
+syslog                                     **한번도 로그인한 적이 없습니다**
+uuidd                                      **한번도 로그인한 적이 없습니다**
+tcpdump                                    **한번도 로그인한 적이 없습니다**
+tss                                        **한번도 로그인한 적이 없습니다**
+landscape                                  **한번도 로그인한 적이 없습니다**
+fwupd-refresh                              **한번도 로그인한 적이 없습니다**
+usbmux                                     **한번도 로그인한 적이 없습니다**
+j                pts/0    10.0.2.2         목  6월 15 09:45:46 +0900 2023
+lxd                                        **한번도 로그인한 적이 없습니다**
+smmta                                      **한번도 로그인한 적이 없습니다**
+smmsp                                      **한번도 로그인한 적이 없습니다**
+tomcat                                     **한번도 로그인한 적이 없습니다**
+it1                                        **한번도 로그인한 적이 없습니다**
+it2                                        **한번도 로그인한 적이 없습니다**
+it3                                        **한번도 로그인한 적이 없습니다**
+it4                                        **한번도 로그인한 적이 없습니다**
+it5              pts/2    10.0.2.2         수  6월 14 19:39:17 +0900 2023
+mysql                                      **한번도 로그인한 적이 없습니다**
+h1               pts/2    10.0.2.2         목  6월 15 10:30:10 +0900 2023
+h2               pts/3    10.0.2.2         목  6월 15 10:16:31 +0900 2023
+[181 @ root /etc/logrotate.d]# last
+h1       pts/2        10.0.2.2         Thu Jun 15 10:30   still logged in
+h2       pts/3        10.0.2.2         Thu Jun 15 10:16 - 10:30  (00:13)
+h1       pts/2        10.0.2.2         Thu Jun 15 10:01 - 10:30  (00:28)
+j        pts/0        10.0.2.2         Thu Jun 15 09:45   still logged in
+j        pts/0        10.0.2.2         Thu Jun 15 09:43 - 09:45  (00:02)
+j        pts/2        10.0.2.2         Thu Jun 15 09:39 - 09:41  (00:01)
+j        pts/0        10.0.2.2         Thu Jun 15 09:29 - 09:43  (00:13)
+reboot   system boot  5.15.0-73-generi Thu Jun 15 09:20   still running
+it5      pts/2        10.0.2.2         Wed Jun 14 19:39 - 19:41  (00:01)
+j        pts/0        10.0.2.2         Wed Jun 14 19:24 - 19:44  (00:20)
+reboot   system boot  5.15.0-73-generi Wed Jun 14 19:23   still running
+j        pts/2        10.0.2.2         Mon Jun 12 17:46 - 17:56  (00:10)
+j        pts/0        10.0.2.2         Mon Jun 12 17:39 - crash (2+01:44)
+reboot   system boot  5.15.0-73-generi Mon Jun 12 17:38   still running
+j        pts/0        10.0.2.2         Mon Jun 12 17:16 - 17:20  (00:04)
+j        tty1                          Mon Jun 12 17:15 - down   (00:05)
+reboot   system boot  5.15.0-73-generi Mon Jun 12 17:14 - 17:20  (00:06)
+
+wtmp begins Mon Jun 12 17:14:34 2023
+[182 @ root /etc/logrotate.d]# w
+ 11:19:39 up  1:59,  3 users,  load average: 0.14, 0.12, 0.04
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+j        pts/0    10.0.2.2         09:45    1:33m  0.11s  0.01s sshd: j [priv]
+j        pts/1    10.0.2.2         09:45    0.00s  0.10s  0.10s sudo -i
+h1       pts/2    10.0.2.2         10:30   26:51   0.01s  0.01s -bash
+
+==============================부팅시 나오는 메세지 확인
+부팅기록
+
+[184 @ root /etc/logrotate.d]# dmesg | nl
+
+
+[193 @ root /var/log]# ls
+alternatives.log  cloud-init-output.log  dmesg.2.gz  landscape  syslog
+apache2           cloud-init.log         dpkg.log    lastlog    tomcat9
+apt               dist-upgrade           faillog     mail.err   ubuntu-advantage-timer.log
+auth.log          dmesg                  installer   mail.log   ubuntu-advantage.log
+bootstrap.log     dmesg.0                journal     mysql      unattended-upgrades
+btmp              dmesg.1.gz             kern.log    private    wtmp
+[194 @ root /var/log]# ls faillog
+faillog
+[195 @ root /var/log]# nl faillog
+     1
+[196 @ root /var/log]# cd apache2
+[197 @ root /var/log/apache2]# ls
+access.log  error.log  error.log.1  other_vhosts_access.log
+[198 @ root /var/log/apache2]# ll
+합계 16
+drwxr-x---  2 root adm    4096  6월 15 09:20 ./
+drwxrwxr-x 12 root syslog 4096  6월 15 09:31 ../
+-rw-r-----  1 root adm       0  6월 12 17:51 access.log
+-rw-r-----  1 root adm     859  6월 15 09:20 error.log
+-rw-r-----  1 root adm     556  6월 14 19:23 error.log.1
+-rw-r-----  1 root adm       0  6월 12 17:51 other_vhosts_access.log
+[199 @ root /var/log/apache2]# nl access.log
+[200 @ root /var/log/apache2]# cd
+[201 @ root ~]# date
+2023. 06. 15. (목) 11:24:44 KST
+
+====================p.127
+
+h1@sun:~$ tty
+/dev/pts/2
+h1@sun:~$ echo "하이루~"
+하이루~
+h1@sun:~$ echo "하이루~" > /dev/pts/1
+-bash: /dev/pts/1: 허가 거부
+
+[202 @ root ~]# tty
+/dev/pts/1
+[203 @ root ~]# echo "하띵하띵" > /dev/pts/2
+
+h1@sun:~$ 하띵하띵
+
+[206 @ root ~]# at now +1 min
+warning: commands will be executed using /bin/sh
+at Thu Jun 15 11:31:00 2023
+at> echo "귯이에여~~~~" >  /dev/pts/1
+at> echo "아주 귯"
+at> <EOT>
+at> <EOT>
+job 1 at Thu Jun 15 11:31:00 2023
+[207 @ root ~]# 귯이에여~~~~
+at now +2 min
+warning: commands will be executed using /bin/sh
+at Thu Jun 15 11:33:00 2023
+at> echo "귯걸~~"
+at> <EOT>
+job 2 at Thu Jun 15 11:33:00 2023
+[208 @ root ~]# at now +3 min
+warning: commands will be executed using /bin/sh
+at Thu Jun 15 11:35:00 2023
+at> reboot
+at> <EOT>
+job 3 at Thu Jun 15 11:35:00 2023
+
+==============시간설정 p.129
+
+
+=====p131
+
+crontab -e    (edit)
+
+
+================
+
+root@sun:/etc/cron.d# vi aa.sh
+root@sun:/etc/cron.d# crontab -e
+
+root@sun:~# mkdir /down
+/var/mail/root에 새로운 메일이 있습니다
+root@sun:~# cd /down
+root@sun:/down# find / -name libc.a
+/home/it5/usr/lib/x86_64-linux-gnu/libc.a
+/usr/lib/x86_64-linux-gnu/libc.a
+
+root@sun:/down# cp /usr/lib/x86_64-linux-gnu/libc.a .
+root@sun:/down# ls
+libc.a
+root@sun:/down# file libc.a
+libc.a: current ar archive(기록을 보관)
+
+================
+
+a.c ====> a.o ==> ==> a.exe
+컴파일  목적파일	실행
+
+===============
+
+root@sun:/down# rm -rf *
+root@sun:/down# ls
+root@sun:/down# cat > y.c
+#include <stdio.h>
+main()
+{       puts("점메추");  return 0; }
+/var/mail/root에 새로운 메일이 있습니다
+root@sun:/down# nl y.c
+     1  #include <stdio.h>
+     2  main()
+     3  {       puts("점메추"); return 0; }
+root@sun:/down# gcc -c y.c
+y.c:2:1: warning: return type defaults to ‘int’ [-Wimplicit-int]
+    2 | main()
+      | ^~~~
+root@sun:/down# ls
+y.c(소스파일)  y.o(목적파일)
+
+================
+root@sun:/down# aq sqlite
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+libaprutil1-dbd-sqlite3/jammy-updates,jammy-security,now 1.6.1-5ubuntu4.22.04.1 amd64 [설치됨,자동]
+libsqlite3-0/jammy-updates,jammy-security,now 3.37.2-2ubuntu0.1 amd64 [설치됨,자동]
+sqlite3/jammy-updates,jammy-security,now 3.37.2-2ubuntu0.1 amd64 [설치됨]
+/var/mail/root에 새로운 메일이 있습니다
+root@sun:/down# sqlite3
+SQLite version 3.37.2 2022-01-06 13:25:41
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> create table k(n);
+sqlite> insert into k values(30);
+sqlite> insert into k values(40);
+sqlite> insert into k values(50);
+sqlite>
+sqlite> select * from k;
+30
+40
+50
+
+sqlite> .q (실행 종료)
+
+
+==============================파일 지워보기
+
+root@sun:/down# apt remove sqlite3
+패키지 목록을 읽는 중입니다... 완료
+의존성 트리를 만드는 중입니다... 완료
+상태 정보를 읽는 중입니다... 완료
+다음 패키지를 지울 것입니다:
+  sqlite3
+0개 업그레이드, 0개 새로 설치, 1개 제거 및 59개 업그레이드 안 함.
+이 작업 후 1,873 k바이트의 디스크 공간이 비워집니다.
+계속 하시겠습니까? [Y/n] y
+(데이터베이스 읽는중 ...현재 86073개의 파일과 디렉터리가 설치되어 있습니다.)
+sqlite3 (3.37.2-2ubuntu0.1)를 제거합니다...
+Processing triggers for man-db (2.10.2-1) ...
+root@sun:/down# sqlite3
+-bash: /usr/bin/sqlite3: 그런 파일이나 디렉터리가 없습니다
+
+==================설치
+
+root@sun:/down# ai sqlite3
+패키지 목록을 읽는 중입니다... 완료
+의존성 트리를 만드는 중입니다... 완료
+상태 정보를 읽는 중입니다... 완료
+.... 설치완료
+
+===================수동설치
+
+root@sun:/down# wget https://www.sqlite.org/2023/sqlite-autoconf-3420000.tar.gz
+--2023-06-15 12:39:54--  https://www.sqlite.org/2023/sqlite-autoconf-3420000.tar.gz
+www.sqlite.org (www.sqlite.org) 해석 중... 45.33.6.223, 2600:3c00::f03c:91ff:fe96:b959
+다음으로 연결 중: www.sqlite.org (www.sqlite.org)|45.33.6.223|:443... 연결했습니다.
+HTTP 요청을 보냈습니다. 응답 기다리는 중... 200 OK
+길이: 3148813 (3.0M) [application/x-gzip]
+저장 위치: ‘sqlite-autoconf-3420000.tar.gz’
+
+sqlite-autoconf-342 100%[===================>]   3.00M  2.57MB/s    / 1.2s
+
+2023-06-15 12:39:56 (2.57 MB/s) - ‘sqlite-autoconf-3420000.tar.gz’ 저장함 [3148813/3148813]
+
+/var/mail/root에 새로운 메일이 있습니다
+root@sun:/down# ls
+sqlite-autoconf-3420000.tar.gz  y.o
+root@sun:/down# tar xf sqlite-autoconf-3420000.tar.gz
+/var/mail/root에 새로운 메일이 있습니다
+root@sun:/down# ls
+sqlite-autoconf-3420000  sqlite-autoconf-3420000.tar.gz  y.o
+root@sun:/down# cd sqlite-autoconf-3420000/
+root@sun:/down/sqlite-autoconf-3420000# ls
+INSTALL            README.txt    config.sub    ltmain.sh  sqlite3.h      tea
+Makefile.am        Replace.cs    configure     missing    sqlite3.pc.in
+Makefile.fallback  aclocal.m4    configure.ac  shell.c    sqlite3.rc
+Makefile.in        compile       depcomp       sqlite3.1  sqlite3ext.h
+Makefile.msc       config.guess  install-sh    sqlite3.c  sqlite3rc.h
+root@sun:/down/sqlite-autoconf-3420000#
+
+================================
+
+오전미션
+-------------
+mkdir  /d400  && cd  /d400
+
+sql  .... tar.gz 다운로드
+
+설치위치 : /mypro (지정 옵션: ./configure  --prefix=...)
+---------------
+crontab
+10분 간격으로 who 결과를 ~/mywho로 저장되게 만들기
+
+p132 ,133 참고
+
+<<그동안 만든 출력물 삭제>>
+
+=============================p141
+
+17장, 네트워크
+
+핵심키워드 20개
+
+============================
+
+ip주소 확인 명령어
+
+
+[312 @ root ~]# ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo (localhost)
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+
+
+2: enp0s3(랜카드 이름): <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:d1:0d:47 brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.15(ip주소)/24 metric 100 brd 10.0.2.255 scope global dynamic enp0s3
+       valid_lft 73779sec preferred_lft 73779sec
+    inet6 fe80::a00:27ff:fed1:d47/64 scope link
+       valid_lft forever preferred_lft forever
+
+========================================================p165
+
+복습
+
+1. 2진수 비트연산
+   2^8 ^16 ^32 ^64 ...
+
+2. 서브넷 나누기
+domain, hostname, netmask, lan, network-주소, broadcast
+
+port (ex . https://www.naver.com:443/index.html)
+
+--port num--p150  주요 port번호
+*http 80
+*https 443
+*ftp 21
+*smtp 25
+*pop3 110
+*imap 143
+*domain 53
+*ssh 22
+
+[323 @ root ~]# nl /etc/services (포트번호 조회 = 너무 많다..)
+     1  # Network services, Internet style
+     2  #
+     3  # Updated from https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml .
+     4  #
+     5  # New ports will be added on request if they have been officially assigned
+     6  # by IANA and used in the real-world or are needed by a debian package.
+     7  # If you need a huge list of used numbers please install the nmap package.
+
+     8  tcpmux          1/tcp                           # TCP port service multiplexer
+     9  echo            7/tcp
+    10  echo            7/udp
+    11  discard         9/tcp           sink null
+    12  discard         9/udp           sink null
+    13  systat          11/tcp          users
+    14  daytime         13/tcp
+    15  daytime         13/udp
+    16  netstat         15/tcp
+    17  qotd            17/tcp          quote
+    18  chargen         19/tcp          ttytst source
+    19  chargen         19/udp          ttytst source
+    20  ftp-data        20/tcp
+    21  ftp             21/tcp
+    22  fsp             21/udp          fspd
+    23  ssh             22/tcp                          # SSH Remote Login Protocol
+    24  telnet          23/tcp
+    25  smtp            25/tcp          mail
+    26  time            37/tcp          timserver
+    27  time            37/udp          timserver
+    28  whois           43/tcp          nicname
+    29  tacacs          49/tcp                          # Login Host Protocol (TACACS)
+    30  tacacs          49/udp
+    31  domain          53/tcp                          # Domain Name Server
+    32  domain          53/udp
+    33  bootps          67/udp
+    34  bootpc          68/udp
+    35  tftp            69/udp
+    36  gopher          70/tcp                          # Internet Gopher
+    37  finger          79/tcp
+    38  http            80/tcp          www             # WorldWideWeb HTTP
+    39  kerberos        88/tcp          kerberos5 krb5 kerberos-sec     # Kerberos v5
+    40  kerberos        88/udp          kerberos5 krb5 kerberos-sec     # Kerberos v5
+    41  iso-tsap        102/tcp         tsap            # part of ISODE
+    42  acr-nema        104/tcp         dicom           # Digital Imag. & Comm. 300
+    43  pop3            110/tcp         pop-3           # POP version 3
+    44  sunrpc          111/tcp         portmapper      # RPC 4.0 portmapper
+    45  sunrpc          111/udp         portmapper
+    46  auth            113/tcp         authentication tap ident
+    47  nntp            119/tcp         readnews untp   # USENET News Transfer Protocol
+    48  ntp             123/udp                         # Network Time Protocol
+    49  epmap           135/tcp         loc-srv         # DCE endpoint resolution
+    50  netbios-ns      137/udp                         # NETBIOS Name Service
+    51  netbios-dgm     138/udp                         # NETBIOS Datagram Service
+    52  netbios-ssn     139/tcp                         # NETBIOS session service
+    53  imap2           143/tcp         imap            # Interim Mail Access P 2 and 4
+    54  snmp            161/tcp                         # Simple Net Mgmt Protocol
+    55  snmp            161/udp
+    56  snmp-trap       162/tcp         snmptrap        # Traps for SNMP
+    57  snmp-trap       162/udp         snmptrap
+    58  cmip-man        163/tcp                         # ISO mgmt over IP (CMOT)
+    59  cmip-man        163/udp
+    60  cmip-agent      164/tcp
+    61  cmip-agent      164/udp
+    62  mailq           174/tcp                 # Mailer transport queue for Zmailer
+    63  xdmcp           177/udp                 # X Display Manager Control Protocol
+    64  bgp             179/tcp                         # Border Gateway Protocol
+    65  smux            199/tcp                         # SNMP Unix Multiplexer
+    66  qmtp            209/tcp                         # Quick Mail Transfer Protocol
+    67  z3950           210/tcp         wais            # NISO Z39.50 database
+    68  ipx             213/udp                         # IPX [RFC1234]
+    69  ptp-event       319/udp
+    70  ptp-general     320/udp
+    71  pawserv         345/tcp                         # Perf Analysis Workbench
+    72  zserv           346/tcp                         # Zebra server
+    73  rpc2portmap     369/tcp
+    74  rpc2portmap     369/udp                         # Coda portmapper
+    75  codaauth2       370/tcp
+    76  codaauth2       370/udp                         # Coda authentication server
+    77  clearcase       371/udp         Clearcase
+    78  ldap            389/tcp                 # Lightweight Directory Access Protocol
+    79  ldap            389/udp
+    80  svrloc          427/tcp                         # Server Location
+    81  svrloc          427/udp
+    82  https           443/tcp                         # http protocol over TLS/SSL
+    83  https           443/udp                         # HTTP/3
+    84  snpp            444/tcp                         # Simple Network Paging Protocol
+    85  microsoft-ds    445/tcp                         # Microsoft Naked CIFS
+    86  kpasswd         464/tcp
+    87  kpasswd         464/udp
+    88  submissions     465/tcp         ssmtp smtps urd # Submission over TLS [RFC8314]
+    89  saft            487/tcp                 # Simple Asynchronous File Transfer
+    90  isakmp          500/udp                         # IPSEC key management
+    91  rtsp            554/tcp                 # Real Time Stream Control Protocol
+    92  rtsp            554/udp
+    93  nqs             607/tcp                         # Network Queuing system
+    94  asf-rmcp        623/udp         # ASF Remote Management and Control Protocol
+    95  qmqp            628/tcp
+    96  ipp             631/tcp                         # Internet Printing Protocol
+    97  ldp             646/tcp                         # Label Distribution Protocol
+    98  ldp             646/udp
+    99  #
+   100  # UNIX specific services
+   101  #
+   102  exec            512/tcp
+   103  biff            512/udp         comsat
+   104  login           513/tcp
+   105  who             513/udp         whod
+   106  shell           514/tcp         cmd syslog      # no passwords used
+   107  syslog          514/udp
+   108  printer         515/tcp         spooler         # line printer spooler
+   109  talk            517/udp
+   110  ntalk           518/udp
+   111  route           520/udp         router routed   # RIP
+   112  gdomap          538/tcp                         # GNUstep distributed objects
+   113  gdomap          538/udp
+   114  uucp            540/tcp         uucpd           # uucp daemon
+   115  klogin          543/tcp                         # Kerberized `rlogin' (v5)
+   116  kshell          544/tcp         krcmd           # Kerberized `rsh' (v5)
+   117  dhcpv6-client   546/udp
+   118  dhcpv6-server   547/udp
+   119  afpovertcp      548/tcp                         # AFP over TCP
+   120  nntps           563/tcp         snntp           # NNTP over SSL
+   121  submission      587/tcp                         # Submission [RFC4409]
+   122  ldaps           636/tcp                         # LDAP over SSL
+   123  ldaps           636/udp
+   124  tinc            655/tcp                         # tinc control port
+   125  tinc            655/udp
+   126  silc            706/tcp
+   127  kerberos-adm    749/tcp                         # Kerberos `kadmin' (v5)
+   128  #
+   129  domain-s        853/tcp                         # DNS over TLS [RFC7858]
+   130  domain-s        853/udp                         # DNS over DTLS [RFC8094]
+   131  rsync           873/tcp
+   132  ftps-data       989/tcp                         # FTP over SSL (data)
+   133  ftps            990/tcp
+   134  telnets         992/tcp                         # Telnet over SSL
+   135  imaps           993/tcp                         # IMAP over SSL
+   136  pop3s           995/tcp                         # POP-3 over SSL
+   137  #
+   138  # From ``Assigned Numbers'':
+   139  #
+   140  #> The Registered Ports are not controlled by the IANA and on most systems
+   141  #> can be used by ordinary user processes or programs executed by ordinary
+   142  #> users.
+   143  #
+   144  #> Ports are used in the TCP [45,106] to name the ends of logical
+   145  #> connections which carry long term conversations.  For the purpose of
+   146  #> providing services to unknown callers, a service contact port is
+   147  #> defined.  This list specifies the port used by the server process as its
+   148  #> contact port.  While the IANA can not control uses of these ports it
+   149  #> does register or list uses of these ports as a convienence to the
+   150  #> community.
+   151  #
+   152  socks           1080/tcp                        # socks proxy server
+   153  proofd          1093/tcp
+   154  rootd           1094/tcp
+   155  openvpn         1194/tcp
+   156  openvpn         1194/udp
+   157  rmiregistry     1099/tcp                        # Java RMI Registry
+   158  lotusnote       1352/tcp        lotusnotes      # Lotus Note
+   159  ms-sql-s        1433/tcp                        # Microsoft SQL Server
+   160  ms-sql-m        1434/udp                        # Microsoft SQL Monitor
+   161  ingreslock      1524/tcp
+   162  datametrics     1645/tcp        old-radius
+   163  datametrics     1645/udp        old-radius
+   164  sa-msg-port     1646/tcp        old-radacct
+   165  sa-msg-port     1646/udp        old-radacct
+   166  kermit          1649/tcp
+   167  groupwise       1677/tcp
+   168  l2f             1701/udp        l2tp
+   169  radius          1812/tcp
+   170  radius          1812/udp
+   171  radius-acct     1813/tcp        radacct         # Radius Accounting
+   172  radius-acct     1813/udp        radacct
+   173  cisco-sccp      2000/tcp                        # Cisco SCCP
+   174  nfs             2049/tcp                        # Network File System
+   175  nfs             2049/udp                        # Network File System
+   176  gnunet          2086/tcp
+   177  gnunet          2086/udp
+   178  rtcm-sc104      2101/tcp                        # RTCM SC-104 IANA 1/29/99
+   179  rtcm-sc104      2101/udp
+   180  gsigatekeeper   2119/tcp
+   181  gris            2135/tcp                # Grid Resource Information Server
+   182  cvspserver      2401/tcp                        # CVS client/server operations
+   183  venus           2430/tcp                        # codacon port
+   184  venus           2430/udp                        # Venus callback/wbc interface
+   185  venus-se        2431/tcp                        # tcp side effects
+   186  venus-se        2431/udp                        # udp sftp side effect
+   187  codasrv         2432/tcp                        # not used
+   188  codasrv         2432/udp                        # server port
+   189  codasrv-se      2433/tcp                        # tcp side effects
+   190  codasrv-se      2433/udp                        # udp sftp side effect
+   191  mon             2583/tcp                        # MON traps
+   192  mon             2583/udp
+   193  dict            2628/tcp                        # Dictionary server
+   194  f5-globalsite   2792/tcp
+   195  gsiftp          2811/tcp
+   196  gpsd            2947/tcp
+   197  gds-db          3050/tcp        gds_db          # InterBase server
+   198  icpv2           3130/udp        icp             # Internet Cache Protocol
+   199  isns            3205/tcp                        # iSNS Server Port
+   200  isns            3205/udp                        # iSNS Server Port
+   201  iscsi-target    3260/tcp
+   202  mysql           3306/tcp
+   203  ms-wbt-server   3389/tcp
+   204  nut             3493/tcp                        # Network UPS Tools
+   205  nut             3493/udp
+   206  distcc          3632/tcp                        # distributed compiler
+   207  daap            3689/tcp                        # Digital Audio Access Protocol
+   208  svn             3690/tcp        subversion      # Subversion protocol
+   209  suucp           4031/tcp                        # UUCP over SSL
+   210  sysrqd          4094/tcp                        # sysrq daemon
+   211  sieve           4190/tcp                        # ManageSieve Protocol
+   212  epmd            4369/tcp                        # Erlang Port Mapper Daemon
+   213  remctl          4373/tcp                # Remote Authenticated Command Service
+   214  f5-iquery       4353/tcp                        # F5 iQuery
+   215  ntske           4460/tcp        # Network Time Security Key Establishment
+   216  ipsec-nat-t     4500/udp                        # IPsec NAT-Traversal [RFC3947]
+   217  iax             4569/udp                        # Inter-Asterisk eXchange
+   218  mtn             4691/tcp                        # monotone Netsync Protocol
+   219  radmin-port     4899/tcp                        # RAdmin Port
+   220  sip             5060/tcp                        # Session Initiation Protocol
+   221  sip             5060/udp
+   222  sip-tls         5061/tcp
+   223  sip-tls         5061/udp
+   224  xmpp-client     5222/tcp        jabber-client   # Jabber Client Connection
+   225  xmpp-server     5269/tcp        jabber-server   # Jabber Server Connection
+   226  cfengine        5308/tcp
+   227  mdns            5353/udp                        # Multicast DNS
+   228  postgresql      5432/tcp        postgres        # PostgreSQL Database
+   229  freeciv         5556/tcp        rptp            # Freeciv gameplay
+   230  amqps           5671/tcp                        # AMQP protocol over TLS/SSL
+   231  amqp            5672/tcp
+   232  amqp            5672/sctp
+   233  x11             6000/tcp        x11-0           # X Window System
+   234  x11-1           6001/tcp
+   235  x11-2           6002/tcp
+   236  x11-3           6003/tcp
+   237  x11-4           6004/tcp
+   238  x11-5           6005/tcp
+   239  x11-6           6006/tcp
+   240  x11-7           6007/tcp
+   241  gnutella-svc    6346/tcp                        # gnutella
+   242  gnutella-svc    6346/udp
+   243  gnutella-rtr    6347/tcp                        # gnutella
+   244  gnutella-rtr    6347/udp
+   245  redis           6379/tcp
+   246  sge-qmaster     6444/tcp        sge_qmaster     # Grid Engine Qmaster Service
+   247  sge-execd       6445/tcp        sge_execd       # Grid Engine Execution Service
+   248  mysql-proxy     6446/tcp                        # MySQL Proxy
+   249  babel           6696/udp                        # Babel Routing Protocol
+   250  ircs-u          6697/tcp                # Internet Relay Chat via TLS/SSL
+   251  bbs             7000/tcp
+   252  afs3-fileserver 7000/udp
+   253  afs3-callback   7001/udp                        # callbacks to cache managers
+   254  afs3-prserver   7002/udp                        # users & groups database
+   255  afs3-vlserver   7003/udp                        # volume location database
+   256  afs3-kaserver   7004/udp                        # AFS/Kerberos authentication
+   257  afs3-volser     7005/udp                        # volume managment server
+   258  afs3-bos        7007/udp                        # basic overseer process
+   259  afs3-update     7008/udp                        # server-to-server updater
+   260  afs3-rmtsys     7009/udp                        # remote cache manager service
+   261  font-service    7100/tcp        xfs             # X Font Service
+   262  http-alt        8080/tcp        webcache        # WWW caching service
+   263  puppet          8140/tcp                        # The Puppet master service
+   264  bacula-dir      9101/tcp                        # Bacula Director
+   265  bacula-fd       9102/tcp                        # Bacula File Daemon
+   266  bacula-sd       9103/tcp                        # Bacula Storage Daemon
+   267  xmms2           9667/tcp        # Cross-platform Music Multiplexing System
+   268  nbd             10809/tcp                       # Linux Network Block Device
+   269  zabbix-agent    10050/tcp                       # Zabbix Agent
+   270  zabbix-trapper  10051/tcp                       # Zabbix Trapper
+   271  amanda          10080/tcp                       # amanda backup services
+   272  dicom           11112/tcp
+   273  hkp             11371/tcp                       # OpenPGP HTTP Keyserver
+   274  db-lsp          17500/tcp                       # Dropbox LanSync Protocol
+   275  dcap            22125/tcp                       # dCache Access Protocol
+   276  gsidcap         22128/tcp                       # GSI dCache Access Protocol
+   277  wnn6            22273/tcp                       # wnn6
+
+   278  #
+   279  # Datagram Delivery Protocol services
+   280  #
+   281  rtmp            1/ddp                   # Routing Table Maintenance Protocol
+   282  nbp             2/ddp                   # Name Binding Protocol
+   283  echo            4/ddp                   # AppleTalk Echo Protocol
+   284  zip             6/ddp                   # Zone Information Protocol
+
+   285  #=========================================================================
+   286  # The remaining port numbers are not as allocated by IANA.
+   287  #=========================================================================
+
+   288  # Kerberos (Project Athena/MIT) services
+   289  kerberos4       750/udp         kerberos-iv kdc # Kerberos (server)
+   290  kerberos4       750/tcp         kerberos-iv kdc
+   291  kerberos-master 751/udp         kerberos_master # Kerberos authentication
+   292  kerberos-master 751/tcp
+   293  passwd-server   752/udp         passwd_server   # Kerberos passwd server
+   294  krb-prop        754/tcp         krb_prop krb5_prop hprop # Kerberos slave propagation
+   295  zephyr-srv      2102/udp                        # Zephyr server
+   296  zephyr-clt      2103/udp                        # Zephyr serv-hm connection
+   297  zephyr-hm       2104/udp                        # Zephyr hostmanager
+   298  iprop           2121/tcp                        # incremental propagation
+   299  supfilesrv      871/tcp                 # Software Upgrade Protocol server
+   300  supfiledbg      1127/tcp                # Software Upgrade Protocol debugging
+
+   301  #
+   302  # Services added for the Debian GNU/Linux distribution
+   303  #
+   304  poppassd        106/tcp                         # Eudora
+   305  moira-db        775/tcp         moira_db        # Moira database
+   306  moira-update    777/tcp         moira_update    # Moira update protocol
+   307  moira-ureg      779/udp         moira_ureg      # Moira user registration
+   308  spamd           783/tcp                         # spamassassin daemon
+   309  skkserv         1178/tcp                        # skk jisho server port
+   310  predict         1210/udp                        # predict -- satellite tracking
+   311  rmtcfg          1236/tcp                        # Gracilis Packeten remote config server
+   312  xtel            1313/tcp                        # french minitel
+   313  xtelw           1314/tcp                        # french minitel
+   314  zebrasrv        2600/tcp                        # zebra service
+   315  zebra           2601/tcp                        # zebra vty
+   316  ripd            2602/tcp                        # ripd vty (zebra)
+   317  ripngd          2603/tcp                        # ripngd vty (zebra)
+   318  ospfd           2604/tcp                        # ospfd vty (zebra)
+   319  bgpd            2605/tcp                        # bgpd vty (zebra)
+   320  ospf6d          2606/tcp                        # ospf6d vty (zebra)
+   321  ospfapi         2607/tcp                        # OSPF-API
+   322  isisd           2608/tcp                        # ISISd vty (zebra)
+   323  fax             4557/tcp                        # FAX transmission service (old)
+   324  hylafax         4559/tcp                        # HylaFAX client-server protocol (new)
+   325  munin           4949/tcp        lrrd            # Munin
+   326  rplay           5555/udp                        # RPlay audio service
+   327  nrpe            5666/tcp                        # Nagios Remote Plugin Executor
+   328  nsca            5667/tcp                        # Nagios Agent - NSCA
+   329  canna           5680/tcp                        # cannaserver
+   330  syslog-tls      6514/tcp                        # Syslog over TLS [RFC5425]
+   331  sane-port       6566/tcp        sane saned      # SANE network scanner daemon
+   332  ircd            6667/tcp                        # Internet Relay Chat
+   333  zope-ftp        8021/tcp                        # zope management by ftp
+   334  tproxy          8081/tcp                        # Transparent Proxy
+   335  omniorb         8088/tcp                        # OmniORB
+   336  clc-build-daemon 8990/tcp                       # Common lisp build daemon
+   337  xinetd          9098/tcp
+   338  git             9418/tcp                        # Git Version Control System
+   339  zope            9673/tcp                        # zope server
+   340  webmin          10000/tcp
+   341  kamanda         10081/tcp                       # amanda backup services (Kerberos)
+   342  amandaidx       10082/tcp                       # amanda backup services
+   343  amidxtape       10083/tcp                       # amanda backup services
+   344  sgi-cmsd        17001/udp               # Cluster membership services daemon
+   345  sgi-crsd        17002/udp
+   346  sgi-gcd         17003/udp                       # SGI Group membership daemon
+   347  sgi-cad         17004/tcp                       # Cluster Admin daemon
+   348  binkp           24554/tcp                       # binkp fidonet protocol
+   349  asp             27374/tcp                       # Address Search Protocol
+   350  asp             27374/udp
+   351  csync2          30865/tcp                       # cluster synchronization tool
+   352  dircproxy       57000/tcp                       # Detachable IRC Proxy
+   353  tfido           60177/tcp                       # fidonet EMSI over telnet
+   354  fido            60179/tcp                       # fidonet EMSI over TCP
+
+   355  # Local services
+
+[324 @ root ~]# grep http /etc/services
+# Updated from https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml .
+http            80/tcp          www             # WorldWideWeb HTTP
+https           443/tcp                         # http protocol over TLS/SSL
+https           443/udp                         # HTTP/3
+http-alt        8080/tcp        webcache        # WWW caching service
+
+[325 @ root ~]# grep ssh /etc/services
+ssh             22/tcp                          # SSH Remote Login Protocol
+[326 @ root ~]# grep domain /etc/services
+domain          53/tcp                          # Domain Name Server
+domain          53/udp
+domain-s        853/tcp                         # DNS over TLS [RFC7858]
+domain-s        853/udp                         # DNS over DTLS [RFC8094]
+[327 @ root ~]# grep mysql /etc/services
+mysql           3306/tcp
+mysql-proxy     6446/tcp                        # MySQL Proxy
+
+=============================================p165
+mysql 관리
+
+>mysql
+>show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> use mysql
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+
+mysql> select user from user;
++------------------+
+| user             |
++------------------+
+| debian-sys-maint |
+| mysql.infoschema |
+| mysql.session    |
+| mysql.sys        |
+| root             |
++------------------+
+5 rows in set (0.00 sec)
+
+mysql> desc user;
++--------------------------+-----------------------------------+------+-----+-----------------------+-------+
+| Field                    | Type                              | Null | Key | Default               | Extra |
++--------------------------+-----------------------------------+------+-----+-----------------------+-------+
+| Host                     | char(255)                         | NO   | PRI |                       |       |
+| User                     | char(32)                          | NO   | PRI |                       |       |
+| Select_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Insert_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Update_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Delete_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Drop_priv                | enum('N','Y')                     | NO   |     | N                     |       |
+| Reload_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Shutdown_priv            | enum('N','Y')                     | NO   |     | N                     |       |
+| Process_priv             | enum('N','Y')                     | NO   |     | N                     |       |
+| File_priv                | enum('N','Y')                     | NO   |     | N                     |       |
+| Grant_priv               | enum('N','Y')                     | NO   |     | N                     |       |
+| References_priv          | enum('N','Y')                     | NO   |     | N                     |       |
+| Index_priv               | enum('N','Y')                     | NO   |     | N                     |       |
+| Alter_priv               | enum('N','Y')                     | NO   |     | N                     |       |
+| Show_db_priv             | enum('N','Y')                     | NO   |     | N                     |       |
+| Super_priv               | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_tmp_table_priv    | enum('N','Y')                     | NO   |     | N                     |       |
+| Lock_tables_priv         | enum('N','Y')                     | NO   |     | N                     |       |
+| Execute_priv             | enum('N','Y')                     | NO   |     | N                     |       |
+| Repl_slave_priv          | enum('N','Y')                     | NO   |     | N                     |       |
+| Repl_client_priv         | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_view_priv         | enum('N','Y')                     | NO   |     | N                     |       |
+| Show_view_priv           | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_routine_priv      | enum('N','Y')                     | NO   |     | N                     |       |
+| Alter_routine_priv       | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_user_priv         | enum('N','Y')                     | NO   |     | N                     |       |
+| Event_priv               | enum('N','Y')                     | NO   |     | N                     |       |
+| Trigger_priv             | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_tablespace_priv   | enum('N','Y')                     | NO   |     | N                     |       |
+| ssl_type                 | enum('','ANY','X509','SPECIFIED') | NO   |     |                       |       |
+| ssl_cipher               | blob                              | NO   |     | NULL                  |       |
+| x509_issuer              | blob                              | NO   |     | NULL                  |       |
+| x509_subject             | blob                              | NO   |     | NULL                  |       |
+| max_questions            | int unsigned                      | NO   |     | 0                     |       |
+| max_updates              | int unsigned                      | NO   |     | 0                     |       |
+| max_connections          | int unsigned                      | NO   |     | 0                     |       |
+| max_user_connections     | int unsigned                      | NO   |     | 0                     |       |
+| plugin                   | char(64)                          | NO   |     | caching_sha2_password |       |
+| authentication_string    | text                              | YES  |     | NULL                  |       |
+| password_expired         | enum('N','Y')                     | NO   |     | N                     |       |
+| password_last_changed    | timestamp                         | YES  |     | NULL                  |       |
+| password_lifetime        | smallint unsigned                 | YES  |     | NULL                  |       |
+| account_locked           | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_role_priv         | enum('N','Y')                     | NO   |     | N                     |       |
+| Drop_role_priv           | enum('N','Y')                     | NO   |     | N                     |       |
+| Password_reuse_history   | smallint unsigned                 | YES  |     | NULL                  |       |
+| Password_reuse_time      | smallint unsigned                 | YES  |     | NULL                  |       |
+| Password_require_current | enum('N','Y')                     | YES  |     | NULL                  |       |
+| User_attributes          | json                              | YES  |     | NULL                  |       |
++--------------------------+-----------------------------------+------+-----+-----------------------+-------+
+51 rows in set (0.01 sec)
+
+mysql> desc db;
++-----------------------+---------------+------+-----+---------+-------+
+| Field                 | Type          | Null | Key | Default | Extra |
++-----------------------+---------------+------+-----+---------+-------+
+| Host                  | char(255)     | NO   | PRI |         |       |
+| Db                    | char(64)      | NO   | PRI |         |       |
+| User                  | char(32)      | NO   | PRI |         |       |
+| Select_priv           | enum('N','Y') | NO   |     | N       |       |
+| Insert_priv           | enum('N','Y') | NO   |     | N       |       |
+| Update_priv           | enum('N','Y') | NO   |     | N       |       |
+| Delete_priv           | enum('N','Y') | NO   |     | N       |       |
+| Create_priv           | enum('N','Y') | NO   |     | N       |       |
+| Drop_priv             | enum('N','Y') | NO   |     | N       |       |
+| Grant_priv            | enum('N','Y') | NO   |     | N       |       |
+| References_priv       | enum('N','Y') | NO   |     | N       |       |
+| Index_priv            | enum('N','Y') | NO   |     | N       |       |
+| Alter_priv            | enum('N','Y') | NO   |     | N       |       |
+| Create_tmp_table_priv | enum('N','Y') | NO   |     | N       |       |
+| Lock_tables_priv      | enum('N','Y') | NO   |     | N       |       |
+| Create_view_priv      | enum('N','Y') | NO   |     | N       |       |
+| Show_view_priv        | enum('N','Y') | NO   |     | N       |       |
+| Create_routine_priv   | enum('N','Y') | NO   |     | N       |       |
+| Alter_routine_priv    | enum('N','Y') | NO   |     | N       |       |
+| Execute_priv          | enum('N','Y') | NO   |     | N       |       |
+| Event_priv            | enum('N','Y') | NO   |     | N       |       |
+| Trigger_priv          | enum('N','Y') | NO   |     | N       |       |
++-----------------------+---------------+------+-----+---------+-------+
+22 rows in set (0.01 sec)
+
+mysql> show grants for current_user;
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Grants for root@localhost                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER, CREATE TABLESPACE, CREATE ROLE, DROP ROLE ON *.* TO `root`@`localhost` WITH GRANT OPTION                                                                                                                                                                                                                                                                                                                                                                                     |
+| GRANT APPLICATION_PASSWORD_ADMIN,AUDIT_ABORT_EXEMPT,AUDIT_ADMIN,AUTHENTICATION_POLICY_ADMIN,BACKUP_ADMIN,BINLOG_ADMIN,BINLOG_ENCRYPTION_ADMIN,CLONE_ADMIN,CONNECTION_ADMIN,ENCRYPTION_KEY_ADMIN,FIREWALL_EXEMPT,FLUSH_OPTIMIZER_COSTS,FLUSH_STATUS,FLUSH_TABLES,FLUSH_USER_RESOURCES,GROUP_REPLICATION_ADMIN,GROUP_REPLICATION_STREAM,INNODB_REDO_LOG_ARCHIVE,INNODB_REDO_LOG_ENABLE,PASSWORDLESS_USER_ADMIN,PERSIST_RO_VARIABLES_ADMIN,REPLICATION_APPLIER,REPLICATION_SLAVE_ADMIN,RESOURCE_GROUP_ADMIN,RESOURCE_GROUP_USER,ROLE_ADMIN,SENSITIVE_VARIABLES_OBSERVER,SERVICE_CONNECTION_ADMIN,SESSION_VARIABLES_ADMIN,SET_USER_ID,SHOW_ROUTINE,SYSTEM_USER,SYSTEM_VARIABLES_ADMIN,TABLE_ENCRYPTION_ADMIN,TELEMETRY_LOG_ADMIN,XA_RECOVER_ADMIN ON *.* TO `root`@`localhost` WITH GRANT OPTION |
+| GRANT PROXY ON ``@`` TO `root`@`localhost` WITH GRANT OPTION                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+mysql> alter user root@localhost identified with mysql_native_password by 'jj';
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> create user myhi@localhost identified with mysql_native_password by '1';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> grant all privileges on hiDB.* to myhi@localhost;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> exit
+Bye
+
+----------------------
+[332 @ root ~]# useradd hi
+[333 @ root ~]# passwd hi
+새 암호:
+새 암호 재입력:
+passwd: 암호를 성공적으로 업데이트했습니다
+[334 @ root ~]# mysql
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+[335 @ root ~]# mysql -u root -pjj
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 8.0.33-0ubuntu0.22.04.2 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+
+mysql>
+
+----------------------duplicate(hi)
+
+login as: hi
+hi@127.0.0.1's password:
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.0-73-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of 2023. 06. 15. (목) 17:23:53 KST
+
+  System load:    0.2763671875      Processes:               135
+  Usage of /home: 83.4% of 2.88GB   Users logged in:         1
+  Memory usage:   39%               IPv4 address for enp0s3: 10.0.2.15
+  Swap usage:     0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+ * Introducing Expanded Security Maintenance for Applications.
+   Receive updates to over 25,000 software packages with your
+   Ubuntu Pro subscription. Free for personal use.
+
+     https://ubuntu.com/pro
+
+Expanded Security Maintenance for Applications is not enabled.
+
+59 updates can be applied immediately.
+추가 업데이트를 확인하려면 apt list --upgradable 을 실행하세요.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+hi@sun:~$
+hi@sun:~$ mysql
+ERROR 1045 (28000): Access denied for user 'hi'@'localhost' (using password: NO)
+hi@sun:~$ mysql -u myhi -p1
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.33-0ubuntu0.22.04.2 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use mysql
+ERROR 1044 (42000): Access denied for user 'myhi'@'localhost' to database 'mysql'
+mysql> create databases kDB;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'databases kDB' at line 1
+mysql> create databases hiDB;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'databases hiDB' at line 1
+mysql> create database hiDB;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> exit
+Bye
+
+-----이미지 불러오기
+php 프로그램 불러오기 p170,171
+
+root> ai php
+
+[337 @ root ~]# ps -ef | grep apache
+tomcat       734       1  0 11:35 ?        00:00:44 /usr/lib/jvm/default-java/bin/java -Djava.util.logging.config.file=/var/lib/tomcat9/conf/logging.properties -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djava.awt.headless=true -Djdk.tls.ephemeralDHKeySize=2048 -Djava.protocol.handler.pkgs=org.apache.catalina.webresources -Dorg.apache.catalina.security.SecurityListener.UMASK=0027 -Dignore.endorsed.dirs= -classpath /usr/share/tomcat9/bin/bootstrap.jar:/usr/share/tomcat9/bin/tomcat-juli.jar -Dcatalina.base=/var/lib/tomcat9 -Dcatalina.home=/usr/share/tomcat9 -Djava.io.tmpdir=/tmp org.apache.catalina.startup.Bootstrap start
+root       12400       1  0 17:32 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data   12402   12400  0 17:32 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data   12403   12400  0 17:32 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data   12404   12400  0 17:32 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data   12405   12400  0 17:32 ?        00:00:00 /usr/sbin/apache2 -k start
+www-data   12406   12400  0 17:32 ?        00:00:00 /usr/sbin/apache2 -k start (이게 떴다면 웹서비스 돌아가는거)
+root       12544    1515  0 17:33 pts/4    00:00:00 grep --color=auto apache
+
+
+마운트 확인
+[338 @ root ~]# df -h
+파일 시스템     크기  사용  가용 사용% 마운트위치
+tmpfs           198M  1.1M  197M    1% /run
+/dev/sda4        15G  4.4G  9.6G   32% /
+tmpfs           988M     0  988M    0% /dev/shm
+tmpfs           5.0M     0  5.0M    0% /run/lock
+/dev/sda5       2.9G  2.5G  322M   89% /home
+/dev/sda6       8.8G   24K  8.3G    1% /data
+/dev/sda2       974M  130M  777M   15% /boot
+tmpfs           198M  4.0K  198M    1% /run/user/1000
+tmpfs           198M  4.0K  198M    1% /run/user/1008
+
+
+[339 @ root ~]# mkdir   /yes
+[340 @ root ~]# mount -t vboxsf win  /yes          (폴더명 win이 아닌 rode였음)
+mount: /yes: special device win does not exist.
+[341 @ root ~]# ls  /yes
+[342 @ root ~]# cp  /yes/my100.png   /var/www/html
+cp: '/yes/my100.png' 상태 정보 확인 불가: 그런 파일이나 디렉터리가 없습니다
+[343 @ root ~]# cd  a /var/www/html/
+-bash: cd: 인자가 너무 많음
+[344 @ root ~]# cd  /var/www/html/
+[345 @ root /var/www/html]# cat  > my.php
+[346 @ root /var/www/html]# vi my.php              ========안되고 있음...
+
+[347 @ root /var/www/html]# mv index.html   7.html
+[348 @ root /var/www/html]# vi index.html
+
+-=-==-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=수정하고 다시 해봄
+
+[349 @ root /var/www/html]#  mount -t vboxsf rode  /yes
+[349 @ root /var/www/html]# ls  /yes
+my100.png
+[350 @ root /var/www/html]# cp  /yes/my100.png   /var/www/html
+[351 @ root /var/www/html]# cd  /var/www/html/
+[352 @ root /var/www/html]# cat  > my.php
+[353 @ root /var/www/html]# mv index.html   7.html
+
+
+
+===================
+
+4일차 미션
+새롭게 이미지 가져오기 (my200.png)
+PHP 연동 가능하게 설치 후 확인  -ok
+
+
+mysql 관리(password 지정)
+리눅스 id ho  ,1
+mysql id myho, 1 , hoDB
+
+===================
+
+안될때
+
+apache2 설치 확인 / start 되었는지
+포트 열렸는지(버추얼박스) 80
+
+php 설치?
+
+mysql - 책, 순서대로 진행
+linux-id . mysql-id는 별개이다. 구분 잘 하기!!
+
+=====================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
